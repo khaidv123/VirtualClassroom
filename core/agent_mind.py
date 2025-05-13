@@ -92,6 +92,7 @@ Tạo ra suy nghĩ nội tâm của bạn dựa trên bối cảnh hiện tại,
 ---
 {history}
 ---
+{poor_thinking}
 
 ## Định dạng đầu ra:
 Chỉ trả về một đối tượng JSON duy nhất theo định dạng sau, không có giải thích hay bất kỳ text nào khác bên ngoài JSON:
@@ -159,7 +160,12 @@ class AgentMind:
         phase_desc_prompt += f"Description: {phase_context.get('description', '')}\n"
         phase_desc_prompt += "Goals:\n" + "\n".join([f"- {g}" for g in phase_context.get('goals', [])])
 
-        ai_desc_prompt = f"Role: {self.persona.role}\n..." # (rest of AI desc)
+        # Poor thinking
+        poor_thinking = ""
+
+        # ai_description
+        ai_desc_prompt = f"Role: {self.persona.role}\nGoal: {self.persona.goal}\nBackstory: {self.persona.backstory}\nFunctions: {self.persona.tasks}" # (rest of AI desc)
+        
         try:
             prompt = AGENT_INNER_THOUGHTS_PROMPT.format(
                 AI_name=self.persona.name,
@@ -168,7 +174,8 @@ class AgentMind:
                 task_status_prompt=task_status_prompt,
                 AI_description=ai_desc_prompt.strip(),
                 previous_thoughts=self._format_previous_thoughts(),
-                history=self._format_history_for_prompt(history)
+                history=self._format_history_for_prompt(history),
+                poor_thinking = poor_thinking
             )
             return prompt
         except KeyError as e:

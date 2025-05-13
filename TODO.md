@@ -66,6 +66,9 @@
 1. Sửa lại hàm tính điểm cuối cùng
 
 
+2. Thêm role để evaluator hiểu đánh giá agent
+
+
 
 
 
