@@ -10,10 +10,6 @@ from services.llm_service import LLMService
 from utils.loaders import load_personas_from_yaml
 from flask import Flask
 
-
-
-# Cho 3 agent suy nghĩ song song
-
 class AgentManager:
     def __init__(self, persona_config_path: str, problem_description: str, llm_service: LLMService, app_instance: Flask):
         self.problem = problem_description

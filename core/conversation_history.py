@@ -6,7 +6,6 @@ import json
 from flask import g # Use Flask's application context for DB access
 from database.database import get_db # Import the get_db function
 
-
 class ConversationHistory:
     def __init__(self):
         # No longer holds data directly, interacts with DB via get_db()

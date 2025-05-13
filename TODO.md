@@ -11,6 +11,8 @@
 
     >> Chỉnh prompt
 
+3. Chỉnh time sleep trước event để 
+
 
 ## Stage management
 1. Code để dựa vào context có sẵn (problem, solution) để **tạo** ra các phases/stages --> ``Materials Content Generator Module``?
@@ -62,6 +64,9 @@
 
 ## Evaluator
 1. Sửa lại hàm tính điểm cuối cùng
+
+
+
 
 
 

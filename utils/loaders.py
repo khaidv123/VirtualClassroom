@@ -48,7 +48,6 @@ def load_personas_from_yaml(filepath: str) -> Dict[str, Persona]:
     return personas
 
 
-# Check lại
 def load_phases_from_yaml(filepath: str) -> Dict[str, Dict]:
     """Loads conversation phase definitions from a YAML file."""
     try:

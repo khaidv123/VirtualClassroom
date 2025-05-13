@@ -3,7 +3,7 @@ import sqlite3
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
-import json 
+import json # For storing content/metadata
 
 DATABASE = 'chat_sessions.db'
 

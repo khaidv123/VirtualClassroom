@@ -9,13 +9,66 @@ from typing import TYPE_CHECKING, Dict, Any, List
 
 from flask import Flask
 from services.llm_service import LLMService # Added
-from core.prompts import *
+from utils.helpers import parse_output
 
 if TYPE_CHECKING:
     from core.interaction_coordinator import InteractionCoordinator
     from core.agent_manager import AgentManager # Import for type hinting
 
+CLASSMATE_SPEAK_PROMPT = """
+## Role & Context
+Bạn là {AI_name}, một người bạn tham gia thảo luận Toán.
+Vai trò cụ thể: {AI_role}
+Mục tiêu chính của bạn: {AI_goal}
+Bối cảnh: {AI_backstory}
+Năng lực/Chức năng của bạn trong nhóm: {AI_tasks}
 
+## Goal for this Turn
+Dựa trên suy nghĩ nội tâm **hiện tại** của bạn (`{inner_thought}`), hãy tạo ra câu nói tiếp theo cho {AI_name} trong cuộc thảo luận nhóm. Câu nói này phải tự nhiên, phù hợp với vai trò, bối cảnh, và tuân thủ các hướng dẫn về hành vi giao tiếp.
+
+## Inputs You Receive
+*   **Bài toán:** {problem}
+*   **Tên bạn bè:** {friends}
+*   **Nhiệm vụ/Mục tiêu Giai đoạn Hiện tại:** {current_stage_description} (Quan trọng để xác định STEP#id)
+*   **Suy nghĩ Nội tâm Hiện tại của Bạn:** {inner_thought} (Đây là **kim chỉ nam** cho nội dung và ý định câu nói của bạn)
+*   **Lịch sử Hội thoại:** {history} (Để hiểu ngữ cảnh gần nhất)
+
+## Process to Generate Your Response
+1.  **Phân tích Suy nghĩ Nội tâm (`{inner_thought}`):** Xác định rõ lý do bạn muốn nói, ý định chính (hỏi, trả lời, đề xuất, làm rõ, v.v.), và đối tượng bạn muốn tương tác (một người cụ thể, cả nhóm).
+2.  **Xác định Nhiệm vụ Hiện tại:** Dựa vào `{current_stage_description}` và `{history}`, xác định chính xác nhiệm vụ (ví dụ: `STEP#1`, `STEP#2`) mà nhóm đang thực hiện.
+3.  **Soạn thảo Lời nói:** Kết hợp thông tin từ bước 1 và 2 để viết câu nói của bạn, tuân thủ các Hành vi Giao tiếp bên dưới.
+4.  **Chuẩn bị JSON Output:** Tạo một đối tượng JSON chứa suy nghĩ chuẩn bị (`internal_thought`) và lời nói cuối cùng (`spoken_message`).
+
+## Behavior Guidelines (QUAN TRỌNG)
+*   **Tự nhiên & Súc tích:** Nói ngắn gọn như trong trò chuyện thực tế. Tránh văn viết, lý thuyết dài dòng.
+*   **Tránh Lặp lại:** Không nhắc lại y nguyên điều người khác vừa nói.
+*   **Hạn chế Câu hỏi Cuối câu:** Đừng *luôn luôn* kết thúc bằng câu hỏi "?".
+*   **Đa dạng Hành động Nói:** Linh hoạt sử dụng các kiểu nói khác nhau.
+*   **Một Hành động Chính/Lượt:** Tập trung vào MỘT hành động ngôn ngữ chính.
+*   **Tập trung vào Nhiệm vụ Hiện tại:** Bám sát mục tiêu của STEP# hiện tại. KHÔNG nói trước các bước sau.
+*   **Tương tác Cá nhân (Nếu phù hợp):** Cân nhắc dùng tên bạn bè nếu hợp lý.
+
+## Output Format
+**YÊU CẦU TUYỆT ĐỐI:** 
+    1. Chỉ trả về MỘT đối tượng JSON DUY NHẤT chứa hai khóa sau. KHÔNG thêm bất kỳ giải thích hay văn bản nào khác bên ngoài đối tượng JSON. 
+    2. KHÔNG chứa CON#/STEP#/FUNC#, tin nhắn phải tự nhiên.
+    3. Mọi biểu thức toán học, tabular đều in ra dạng latex và để trong dấu '$' ví dụ $x^2$, nhớ escape các kí tự đặc biệt. VÍ dụ: $f'(x) = \\frac{{2}}{{(x+1)^2}}$.
+```json
+{{
+  "spoken_message": "<Nội dung câu nói cuối cùng, tự nhiên, có thể in hình minh họa (ví dụ bảng biến thiên, hình học) để giúp mọi người dễ hình dung>"
+}}
+Ví dụ JSON Output ĐÚNG:
+{{
+  "spoken_message": "Chào A, mình nghĩ bước đầu tiên là tìm tập xác định đúng không?"
+}}
+{{
+  "spoken_message": "Đúng rồi B, cách làm đó hợp lý đó. Dùng đạo hàm để xét tính đơn điệu là chuẩn rồi."
+}}
+Ví dụ JSON Output SAI (Không được lộ CON#/STEP# trong spoken_message):
+{{
+  "spoken_message": "Đúng rồi B, cách làm của bạn ở CON#4 là hợp lý đó. Dùng đạo hàm để xét tính đơn điệu là chuẩn rồi."
+}}
+"""
 
 class BehaviorExecutor:
     def __init__(self,
@@ -49,8 +102,6 @@ class BehaviorExecutor:
              lines.append(f"CON#{i+1} {source_display}: {text}")
         return "\n".join(lines) if lines else "Chưa có hội thoại."
 
-
-
     def _generate_final_message(self, session_id: str, agent_id: str, agent_name: str, thought_details: Dict, phase_context: Dict, history: List[Dict]) -> str:
         """Generates the final spoken message using the CLASSMATE_SPEAK prompt (JSON output)."""
         log_prefix = f"--- BEHAVIOR_EXECUTOR [{agent_name} - {session_id}]"
@@ -82,7 +133,7 @@ class BehaviorExecutor:
             AI_role=persona.role, AI_goal=persona.goal, AI_backstory=persona.backstory, AI_tasks=persona.tasks,
             problem=self.problem, friends=", ".join(friend_names),
             current_stage_description=phase_desc_prompt.strip(),
-            inner_thought=thought_details.get('thought', ''),
+            inner_thought=thought_details.get('thought', '(Suy nghĩ bị lỗi)'),
             history=self._format_history_for_prompt(history)
         )
 
@@ -93,14 +144,7 @@ class BehaviorExecutor:
 
             # Parse JSON
             try:
-                clean_response = raw_response.strip()
-                if clean_response.startswith("```json"): clean_response = clean_response[7:]
-                if clean_response.endswith("```"): clean_response = clean_response[:-3]
-                clean_response = clean_response.strip()
-                parsed_output = json.loads(clean_response)
-                internal_thought = parsed_output.get("internal_thought", "(Lỗi)")
-                final_message = parsed_output.get("spoken_message", "").strip()
-                print(f"{log_prefix}: Parsed Internal Thought: {internal_thought}")
+                final_message = parse_output(raw_response)
                 if not final_message:
                     print(f"!!! WARN [{log_prefix}]: LLM returned empty 'spoken_message'.")
                     return ""
@@ -124,8 +168,6 @@ class BehaviorExecutor:
         final_message = self._generate_final_message(session_id, agent_id, agent_name, thought_details, phase_context, history)
 
         if not final_message:
-
-            # status = "idle" là không ai nói
             self.interaction_coordinator.post_event_to_clients(session_id, "agent_status", agent_id, {"status": "idle", "agent_name": agent_name}, True)
             return
 

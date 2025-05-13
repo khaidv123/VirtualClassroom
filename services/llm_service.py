@@ -5,10 +5,10 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 load_dotenv()
-
 from tenacity import retry, stop_after_attempt, wait_fixed, before_sleep_log
 import logging
-
+from dotenv import load_dotenv
+load_dotenv()
 
 # Cấu hình logger
 logger = logging.getLogger(__name__)
