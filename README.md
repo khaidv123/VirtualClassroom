@@ -103,8 +103,7 @@ The results show that the system outperforms the baseline on all four tasks.
 1.  **Clone Repository**
 
     ```bash
-    git clone https://github.com/nguyenduchuyiu/multiagentclassroom.git
-    cd multiagentclassroom # <--- Updated directory name assumption
+    git clone https://github.com/khaidv123/VirtualClassroom.git
     ```
 
 2.  **Set Up Virtual Environment**
