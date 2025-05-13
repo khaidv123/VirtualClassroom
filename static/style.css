@@ -837,3 +837,28 @@ li.participant.status-typing {
 .progress-container span:hover[title]::after {
     display: block;
 }
+
+
+
+
+/*"New/List Sessions" */
+.styled-button-link {
+    display: inline-block;         
+    padding: 8px 16px;        
+    background-color: #6aabf0;    
+    color: white;                 
+    text-align: center;          
+    text-decoration: none;      
+    border-radius: 5px;           
+    border: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;         
+    margin-left: 15px;           
+  }
+  
+  .styled-button-link:hover,
+  .styled-button-link:focus {
+    background-color: #0056b3;     
+    color: white;                 
+    text-decoration: none;        
+  }
