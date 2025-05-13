@@ -2,6 +2,7 @@
 
 **MultiAgentClassroom** is a Flask-based web application that creates a dynamic **virtual learning environment**. It enables real-time, structured discussions between **multiple AI agents** (acting as tutors, peers, or provocateurs) and human students. The framework is designed not just for collaborative problem-solving, but to facilitate **pedagogically-driven interactions**, including instruction, guided discovery, and reasoned debate. The core strength lies in its sophisticated **multi-agent system** that can be configured to simulate diverse classroom dynamics.
 
+![UI image](assets/ui.png)
 ---
 
 ## Core Multi-Agent Architecture for Educational Interactions
@@ -18,6 +19,8 @@ MultiAgentClassroom's architecture is designed to support rich educational exper
     *   **Coordinated Instructional Speaker Selection:** This vital **multi-agent coordination** phase ensures the most effective pedagogical intervention. The **Speaker Selector** (an LLM-assisted component) systematically evaluates the "speak" intentions proposed by active agents. It scores these proposals based on their alignment with the current learning objective, the student's needs, the agent's designated pedagogical role, and the overall instructional strategy. The agent with the most pedagogically sound and contextually relevant proposal is selected to interact with the student.
     *   **Delivering the Instructional/Debate Response:** The selected agent, guided by the `BehaviorExecutor` and LLM, constructs its message. This message is carefully aligned with its pedagogical persona and the specific instructional goal that led to its selection by the **multi-agent system**.
     *   **Sharing Knowledge and Perspectives:** The chosen agent's response is distributed via the **Interaction Coordinator** and SSE to the student and all other agents. This ensures that the student receives targeted input while the entire **multi-agent teaching team** remains aware of the evolving learning dialogue.
+  
+![system](assets/Thesis_system.drawio.png)
 
 3.  **Configuring the Educational Environment & Tracking Progress:**
     *   **YAML Files (Defining Pedagogical Roles & Learning Flows):** These files are instrumental in shaping the **virtual classroom**.
@@ -74,7 +77,27 @@ MultiAgentClassroom's YAML configuration empowers educators and designers to cre
 **Key Educational Advantage:** By modifying these YAML files, educators can design diverse **multi-agent learning scenarios**—from one-on-one AI tutoring to complex group debates with AI peers—tailoring the experience to specific learning objectives and pedagogical approaches without altering the core application.
 
 ---
+## Evaluation
+### Baseline
+We install [SimClass](https://arxiv.org/abs/2406.19226) as the baseline
 
+### Methods
+Drawing inspiration from MT-Bench-101, which focuses on conversation evaluation, this study proposes the generation of simulated conversations tailored to specific objectives or scenarios to assess the
+capabilities of conversational agents. The conversation will be created first as a context, then a few agent turns will be created for evaluation. For a conversation between students solving a math problem, we chose four types of tasks to create an assessment scenario:
+
+![cat](assets/categories.png)
+
+#### Results
+The results show that the system outperforms the baseline on all four tasks.
+![res](assets/radar_v2.png)
+
+
+---
+## Flow of System
+![flow](assets/flowchart.png)
+
+
+---
 ## Installation & Running Your Multi-Agent Learning Environment
 
 1.  **Clone Repository**
