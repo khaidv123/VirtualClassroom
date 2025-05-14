@@ -1,27 +1,125 @@
+# problem: |
+#   Xét tính đơn điệu của hàm số $f(x) = \frac{x-1}{x+1}$.
+
+# solution: |
+#   **Bước 1: Tập Xác Định**
+#   $D = \mathbb{R} \setminus \{-1\}$
+
+#   **Bước 2: Tính Đạo Hàm**
+#   $f'(x) = \frac{2}{(x+1)^2}$
+
+#   **Bước 3: Xét Dấu Đạo Hàm**
+#   $f'(x) > 0 \forall x \neq -1$
+
+#   **Bước 4: Tính Giới Hạn Để Vẽ BBT**
+#   $\lim_{x \to +\infty} f(x) = 1$
+#   $\lim_{x \to -\infty} f(x) = 1$
+#   $\lim_{x \to -1^+} f(x) = -\infty$
+#   $\lim_{x \to -1^-} f(x) = +\infty$
+
+#   **Bước 5: Bảng Biến Thiên**
+#   | $x$    | $-\infty$ |       $-1$       | $+\infty$ |
+#   | :------- | :-------: | :----------------: | :-------: |
+#   | $f'(x)$ |    $+$    |          $\|$          |    $+$    |
+#   | $f(x)$  |     1 $\nearrow$  $+\infty$     | $\|$  |    $-\infty$ $\nearrow$  1 |
+
+#   **Bước 6: Kết Luận Tính Đơn Điệu**
+#   Hàm số đồng biến trên khoảng $(-\infty; -1)$ và $(-1; +\infty)$.
+
+
+
 problem: |
-  Xét tính đơn điệu của hàm số $f(x) = \frac{x-1}{x+1}$.
+  Một doanh nghiệp tư nhân A chuyên kinh doanh xe gắn máy các loại. Hiện nay,
+  doanh nghiệp đang tập trung chiến lược vào kinh doanh xe honda Future Fi với chi
+  phí mua vào là 27 (triệu đồng) và bán với giá 31 (triệu đồng) mỗi chiếc. Với giá bán
+  này thì số lượng xe mà khách hàng sẽ mua trong một năm là là 600 chiếc. Nhằm
+  mục tiêu đẩy mạnh hơn nữa lượng tiêu thụ dòng xe đang ăn khách này, doanh
+  nghiệp dự định giảm giá bán và ước tính rằng nếu giảm 1 (triệu đồng) mỗi chiếc thì
+  số lượng xe bán ra trong một năm sẽ tăng thêm 200 chiếc. Vậy doanh nghiệp phải
+  định bán với giá bán mới là bao nhiêu triệu đồng để sau khi đã thực hiện giảm giá,
+  lợi nhuận thu được sẽ là cao nhất?
 
 solution: |
-  **Bước 1: Tập Xác Định**
-  $D = \mathbb{R} \setminus \{-1\}$
+  **Bước 1: Gọi ẩn và lập biểu thức lợi nhuận**
 
-  **Bước 2: Tính Đạo Hàm**
-  $f'(x) = \frac{2}{(x+1)^2}$
+  Gọi $x$ là số triệu đồng giảm giá mỗi chiếc xe (điều kiện $x > 0$).
 
-  **Bước 3: Xét Dấu Đạo Hàm**
-  $f'(x) > 0 \forall x \neq -1$
+  * Giá bán mới mỗi xe:
 
-  **Bước 4: Tính Giới Hạn Để Vẽ BBT**
-  $\lim_{x \to +\infty} f(x) = 1$
-  $\lim_{x \to -\infty} f(x) = 1$
-  $\lim_{x \to -1^+} f(x) = -\infty$
-  $\lim_{x \to -1^-} f(x) = +\infty$
+    $$
+    31 - x \quad \text{(triệu đồng)}
+    $$
 
-  **Bước 5: Bảng Biến Thiên**
-  | $x$    | $-\infty$ |       $-1$       | $+\infty$ |
-  | :------- | :-------: | :----------------: | :-------: |
-  | $f'(x)$ |    $+$    |          $\|$          |    $+$    |
-  | $f(x)$  |     1 $\nearrow$  $+\infty$     | $\|$  |    $-\infty$ $\nearrow$  1 |
+  * Giá mua vào:
 
-  **Bước 6: Kết Luận Tính Đơn Điệu**
-  Hàm số đồng biến trên khoảng $(-\infty; -1)$ và $(-1; +\infty)$.
+    $$
+    27 \quad \text{(triệu đồng)}
+    $$
+
+  → **Lợi nhuận trên mỗi xe**:
+
+  $$
+  (31 - x) - 27 = 4 - x \quad \text{(triệu đồng)}
+  $$
+
+  * **Số xe bán được** mỗi năm sẽ là:
+
+  $$
+  600 + 200x \quad \text{(chiếc)}
+  $$
+
+  → **Tổng lợi nhuận** thu được là:
+
+  $$
+  S(x) = (4 - x)(600 + 200x) \quad \text{(triệu đồng)}
+  $$
+
+  ---
+
+  #### **Bước 2: Khai triển và rút gọn biểu thức $S(x)$**
+
+  $$
+  S(x) = (4 - x)(600 + 200x)
+  = 2400 + 800x - 600x - 200x^2
+  = 2400 + 200x - 200x^2
+  $$
+
+  Vậy:
+
+  $$
+  S(x) = -200x^2 + 200x + 2400
+  $$
+
+  ---
+
+  #### **Bước 3: Dùng đạo hàm để tìm cực đại của hàm lợi nhuận**
+
+  Ta lấy đạo hàm của $S(x)$ theo $x$:
+
+  $$
+  S'(x) = \frac{d}{dx}(-200x^2 + 200x + 2400) = -400x + 200
+  $$
+
+  Tìm điểm cực đại bằng cách giải phương trình $S'(x) = 0$:
+
+  $$
+  -400x + 200 = 0 \Rightarrow x = 0.5
+  $$
+
+  Vì hệ số $x^2$ là âm nên hàm số đạt cực đại tại $x = 0.5$.
+
+  ---
+
+  #### **Bước 4: Tính giá bán tương ứng**
+
+  Giá bán mới:
+
+  $$
+  31 - x = 31 - 0.5 = 30.5 \quad \text{(triệu đồng)}
+  $$
+
+  ---
+
+  ### **Bước 5: Kết luận:**
+
+  Doanh nghiệp nên **giảm giá 0.5 triệu đồng mỗi xe**, tức là bán với giá **30.5 triệu đồng/chiếc**, để đạt được **lợi nhuận tối đa**.

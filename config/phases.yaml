@@ -6,15 +6,17 @@
   tasks:
     - id: "1.1"
       description: |
-        Tìm hiểu bài toán cho những gì? Đâu là ẩn? Đâu là dữ liệu? 
-        Và bài toán yêu cầu tìm hay chứng minh điều gì? 
-        (Chỉ cần nêu và nhận xét chứ không cần đi chi tiết vào)
+        Đầu tiên cần nêu câu hỏi trước: "Tìm hiểu bài toán cho những gì? Đâu là ẩn? Đâu là dữ liệu? Và bài toán yêu cầu tìm hay chứng minh điều gì?".
+        Sau đó lần lượt thảo luận với nhau để đưa ra câu trả lời.
+        (Ví dụ: Chi phí mua vào, giá bán ban đầu, số lượng bán ban đầu, mối quan hệ giữa việc giảm giá và tăng số lượng bán ra. Bài toán yêu cầu tìm giá bán mới để lợi nhuận cao nhất.)
+        Lưu ý quan trọng, **CHƯA cần thực hiện cụ thể, chi tiết bài làm. Chỉ cần tìm hiểu bài toán**.
     - id: "1.2"
       description: |
         Khi đã giải quyết được các nhiệm vụ trên và nắm được các mục tiêu, 
         đề nghị cả nhóm sang bước mới là "Lên kế hoạch".
   goals:
-    - "Nhận biết đây là dạng bài toán xét tính đơn điệu của hàm số bậc nhất trên bậc nhất"
+    - "Nhận biết đây là dạng bài toán tối ưu hóa, cụ thể là tìm giá trị lớn nhất của hàm lợi nhuận."
+    - "Xác định được biến số chính, các đại lượng phụ thuộc."
 
 "2":
   stage: "2"
@@ -25,14 +27,19 @@
     - id: "2.1"
       description: |
         Đề xuất phương pháp giải bài từ quan sát và đánh giá bài toán. 
-        Nhận xét, phân tích một phương pháp cụ thể xem có khả thi không. 
-        Tuy nhiên CHƯA cần thực hiện cụ thể, chi tiết.
+        Cụ thể đề xuất từng bước:
+        1. Gọi ẩn là số tiền giảm giá (hoặc giá bán mới).
+        2. Lập hàm biểu thị lợi nhuận theo ẩn đó.
+        3. Sử dụng đạo hàm để tìm cực trị (cực đại) của hàm lợi nhuận.
+        4. Từ đó suy ra giá bán tối ưu.
+        Nhận xét, phân tích phương pháp này xem có khả thi không. 
+        Lưu ý quan trọng, **CHƯA cần thực hiện tính toán cụ thể, chi tiết từng bước chỉ **.
     - id: "2.2"
       description: |
         Khi đã giải quyết được các nhiệm vụ trên và nắm được các mục tiêu, 
         đề nghị cả nhóm sang bước mới là "Thực hiện giải bài cụ thể".
   goals:
-    - "Thống nhất được cách làm phổ biến nhất là dùng đạo hàm để xét tính đơn điệu và vẽ bảng biến thiên."
+    - "Thống nhất được cách làm: Gọi $x$ là số tiền giảm giá, xây dựng hàm lợi nhuận $S(x)$, tìm $x$ để $S(x)$ đạt giá trị lớn nhất bằng cách giải $S'(x)=0$."
 
 "3":
   stage: "3"
@@ -41,37 +48,43 @@
     Thực hiện cụ thể các bước giải bài theo kế hoạch đã đề ra.
   tasks:
     - id: "3.1"
-      description: "Bước 1: Tìm Tập Xác Định D = ℝ \\ {-1}"
+      description: |
+        Bước 1: Gọi ẩn và lập biểu thức lợi nhuận.
+        Gọi $x$ là số triệu đồng giảm giá mỗi chiếc xe (điều kiện $x > 0$).
+        - Giá bán mới: $31 - x$ (triệu đồng)
+        - Lợi nhuận trên mỗi xe: $(31 - x) - 27 = 4 - x$ (triệu đồng)
+        - Số xe bán được: $600 + 200x$ (chiếc)
+        - Tổng lợi nhuận: $S(x) = (4 - x)(600 + 200x)$ (triệu đồng)
     - id: "3.2"
-      description: "Bước 2: Tính Đạo Hàm f'(x) = 2 / (x + 1)^2"
+      description: |
+        Bước 2: Khai triển và rút gọn biểu thức $S(x)$.
+        $S(x) = 2400 + 800x - 600x - 200x^2 = -200x^2 + 200x + 2400$
     - id: "3.3"
-      description: "Bước 3: Xét Dấu Đạo Hàm f'(x) > 0 ∀ x ≠ -1"
+      description: |
+        Bước 3: Dùng đạo hàm để tìm cực đại của hàm lợi nhuận.
+        Tính đạo hàm $S'(x) = (-200x^2 + 200x + 2400)' = -400x + 200$.
     - id: "3.4"
       description: |
-        Bước 4: Tính Giới Hạn (lim)
-        lim(x → +∞) f(x) = 1
-        lim(x → -∞) f(x) = 1
-        lim(x → -1⁺) f(x) = -∞
-        lim(x → -1⁻) f(x) = +∞
+        Bước 4: Tìm điểm cực trị.
+        Giải phương trình $S'(x) = 0 \Rightarrow -400x + 200 = 0 \Rightarrow x = 0.5$.
+        (Kiểm tra: Vì hệ số của $x^2$ trong $S(x)$ là $-200 < 0$, nên parabol quay bề lõm xuống dưới, do đó điểm cực trị này là điểm cực đại.)
     - id: "3.5"
       description: |
-        Bước 5: Lập Bảng Biến Thiên  
-        | x      | -∞         |   -1        | +∞         |
-        |--------|------------|-------------|------------|
-        | f'(x)  | +          |   ∥         | +          |
-        | f(x)   | 1 ↑ +∞     |   ∥         | -∞ ↑ 1     |
+        Bước 5: Tính giá bán tương ứng.
+        Giá bán mới: $31 - x = 31 - 0.5 = 30.5$ (triệu đồng).
     - id: "3.6"
       description: |
-        Bước 6: Kết Luận Tính Đơn Điệu: 
-        Hàm số đồng biến trên khoảng (-∞, -1) và (-1, +∞).
+        Bước 6: Kết luận về giá bán.
+        Doanh nghiệp nên bán với giá 30.5 triệu đồng/chiếc để đạt lợi nhuận tối đa.
     - id: "3.7"
       description: |
         Khi đã giải quyết được đầy đủ các bước làm của lời giải trên, 
         đề nghị cả nhóm sang quá trình cuối là "Kết luận và đánh giá cả bài làm".
   goals:
-    - "Tính đạo hàm và xét dấu đúng."
-    - "Nhận biết tính đơn điệu qua dấu đạo hàm."
-    - "Sử dụng bảng biến thiên để hỗ trợ kết luận."
+    - "Lập đúng hàm lợi nhuận $S(x)$."
+    - "Tính đạo hàm $S'(x)$ và giải phương trình $S'(x)=0$ chính xác."
+    - "Xác định được giá trị $x$ (mức giảm giá) để lợi nhuận là tối đa."
+    - "Tính toán đúng giá bán mới."
 
 "4":
   stage: "4"
@@ -80,17 +93,20 @@
     Kết luận lại quá trình làm bài và đánh giá kết quả đạt được.
   tasks:
     - id: "4.1"
-      description: "Tóm tắt những bước chính đã làm."
+      description: "Tóm tắt những bước chính đã làm: Gọi ẩn, lập hàm lợi nhuận, tìm đạo hàm, giải phương trình đạo hàm bằng 0, tìm giá trị tối ưu và kết luận."
     - id: "4.2"
-      description: "Đánh giá phương pháp đã làm."
+      description: "Đánh giá phương pháp đã làm: Phương pháp sử dụng đạo hàm để tìm cực trị của hàm lợi nhuận là một công cụ mạnh và hiệu quả cho bài toán tối ưu hóa này."
     - id: "4.3"
-      description: "Rút ra được nguyên tắc làm bài."
+      description: "Rút ra được nguyên tắc làm bài cho các bài toán tối ưu tương tự trong kinh doanh."
     - id: "4.4"
       description: |
         Khi đã giải quyết được các nhiệm vụ trên và nắm được các mục tiêu, 
         kết thúc bài toán ở đây và kết thúc thảo luận.
   goals:
     - |
-      Rút ra được nguyên tắc làm dạng này như sau:
-      Bước 1: Tìm tập xác định D...
-      Bước 4: Nêu kết luận...
+      Rút ra được nguyên tắc làm dạng bài toán tối ưu hóa lợi nhuận (hoặc chi phí):
+      Bước 1: Xác định đại lượng cần tối ưu (lợi nhuận, doanh thu, chi phí,...).
+      Bước 2: Chọn một biến số thích hợp (ví dụ: mức giảm giá, số lượng sản phẩm, giá bán).
+      Bước 3: Xây dựng hàm số biểu thị đại lượng cần tối ưu theo biến số đã chọn.
+      Bước 4: Sử dụng các công cụ giải tích (thường là đạo hàm) để tìm giá trị của biến số sao cho hàm số đạt cực trị (cực đại hoặc cực tiểu tùy yêu cầu).
+      Bước 5: Kiểm tra các điều kiện ràng buộc (nếu có) và đưa ra kết luận cho bài toán.

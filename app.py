@@ -50,9 +50,8 @@ SOLUTION_DESCRIPTION = problem_context_data['solution']
 print("--- APP: Initializing Core Components ---")
 try:
     conversation_history = ConversationHistory()
-    # CHỉnh tem
-    # llm_service = LLMService(model="gemini-2.0-flash", temperature=1)
-    llm_service = LLMService(model="gemini-2.0-flash", temperature=2)
+    # Temperature Config
+    llm_service = LLMService(model="gemini-2.0-flash", temperature=0.9)
     phase_manager = ConversationPhaseManager(PHASE_CONFIG_PATH, PROBLEM_DESCRIPTION, llm_service, app_instance=app)
     agent_manager = AgentManager(PERSONA_CONFIG_PATH, PROBLEM_DESCRIPTION, llm_service, app_instance=app)
     speaker_selector = SpeakerSelector(PROBLEM_DESCRIPTION, llm_service)
@@ -122,7 +121,7 @@ def new_chat():
         print(f"--- APP: Created new session {session_id} for user {user_name} ---")
 
         # Add initial system message
-        initial_text = f"Chào mừng các bạn! Chúng ta hãy cùng giải bài toán sau:\n\n{PROBLEM_DESCRIPTION}\n\nBắt đầu với giai đoạn 1: Tìm hiểu đề bài nhé!"
+        initial_text = f"Chào mừng các bạn! Chúng ta hãy cùng giải bài toán sau:\n\n\"{PROBLEM_DESCRIPTION}\"\n\n Bắt đầu nào!"
         initial_content = {"text": initial_text, "sender_name": "System"}
         # ConversationHistory needs app context if called outside request/app context scope,
         # but here it's still within the request context, so it should work.

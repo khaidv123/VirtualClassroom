@@ -3,6 +3,7 @@ import queue
 import threading
 import uuid
 import time
+import random
 from typing import Dict, Any, Optional
 from core.conversation_history import ConversationHistory
 from typing import TYPE_CHECKING
@@ -94,7 +95,8 @@ class InteractionCoordinator:
 
         # Trigger orchestrator
         if self.response_orchestrator:
-             delay = 10 # wait in case user enters more input 
+             # PAUSE DELAY - random 5-10s
+             delay = random.uniform(3, 10) # wait in case user enters more input 
              print(f"--- INT_COORD [{session_id}]: Scheduling orchestrator trigger after {delay:.2f}s delay (external).")
              timer = threading.Timer(delay, self._delayed_orchestrator_trigger, args=[session_id, logged_event])
              timer.start()
@@ -111,7 +113,10 @@ class InteractionCoordinator:
 
                 # Broadcast logged internal events
             self.post_event_to_clients(session_id, event_type, source, content, metadata=logged_event.get("metadata"))
-            time.sleep(10) # wait in case user enter more input
+
+            # PAUSE
+            delay = random.uniform(3, 10)
+            time.sleep(delay) # wait in case user enter more input
 
             # Trigger orchestrator for agent messages
             if event_type == 'new_message' and self.response_orchestrator and logged_event:

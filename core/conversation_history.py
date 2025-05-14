@@ -64,7 +64,7 @@ class ConversationHistory:
             # Note: Efficient limiting might depend on DB. For SQLite, getting all and slicing might be okay for moderate history.
             # For large histories, consider OFFSET/LIMIT or window functions if performance is critical.
             # Let's fetch all and slice in Python for simplicity here.
-             pass # Fetch all first
+            pass # Fetch all first
 
         try:
             cursor = db.execute(query, params)

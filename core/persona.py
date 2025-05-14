@@ -9,7 +9,7 @@ class Persona:
     role: str = ""
     goal: str = ""
     backstory: str = ""
-    tasks: str = "" # Store the multi-line tasks description as a string
+    tasks: str = "" 
     personality_traits: List[str] = field(default_factory=list)
     model: str = "gemini-2.0-flash" # Default model
-    tools: List[str] = field(default_factory=list) # List of tool names/functions
+    tools: List[str] = field(default_factory=list)
