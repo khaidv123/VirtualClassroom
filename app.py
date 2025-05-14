@@ -15,7 +15,7 @@ load_dotenv()
 
 from database import database
 
-# Import New Core Components
+# Import 
 from core.conversation_history import ConversationHistory
 from core.interaction_coordinator import InteractionCoordinator
 from core.response_orchestrator import ResponseOrchestrator
@@ -88,7 +88,6 @@ atexit.register(cleanup_system)
 @app.route('/')
 def list_sessions():
     """Lists existing chat sessions."""
-    # DB access happens within request context here, no extra context needed
     db = database.get_db()
     sessions = db.execute(
         'SELECT session_id, user_name, created_at FROM sessions ORDER BY created_at DESC'
@@ -109,13 +108,13 @@ def new_chat():
     initial_metadata = {
         "status": "active",
         "current_phase_id": "1", # Start at phase 1
-        "completed_tasks": {} # Store completed tasks per phase: {"phase_id": ["task_id1", "task_id2"]}
+        "completed_tasks": {} # e.g., {"phase_id": ["task_id1", "task_id2"]}
     }
 
     try:
         db.execute(
             "INSERT INTO sessions (session_id, user_name, problem_description, current_phase_id, metadata) VALUES (?, ?, ?, ?, ?)",
-            (session_id, user_name, PROBLEM_DESCRIPTION, "1", json.dumps(initial_metadata)) # Use json.dumps for metadata adapter
+            (session_id, user_name, PROBLEM_DESCRIPTION, "1", json.dumps(initial_metadata)) 
         )
         db.commit()
         print(f"--- APP: Created new session {session_id} for user {user_name} ---")
@@ -123,8 +122,7 @@ def new_chat():
         # Add initial system message
         initial_text = f"Chào mừng các bạn! Chúng ta hãy cùng giải bài toán sau:\n\n\"{PROBLEM_DESCRIPTION}\"\n\n Bắt đầu nào!"
         initial_content = {"text": initial_text, "sender_name": "System"}
-        # ConversationHistory needs app context if called outside request/app context scope,
-        # but here it's still within the request context, so it should work.
+        
         conversation_history.add_event(
              session_id=session_id,
              event_type="system_message",
@@ -134,7 +132,7 @@ def new_chat():
 
         return redirect(url_for('chat_interface', session_id=session_id))
 
-    except database.sqlite3.IntegrityError: # More specific error
+    except database.sqlite3.IntegrityError: 
         flash("Error creating session ID (possible duplicate). Please try again.", "error")
         return redirect(url_for('list_sessions'))
     except Exception as e:
@@ -212,8 +210,7 @@ def send_message(session_id):
 
     print(f"--- APP [{session_id}]: Received message from '{sender_name}' ({sender_id}): {user_message_text}")
 
-    # Trigger IC - This call happens within request context.
-    # The IC then starts background threads which NEED their own context push.
+    # TRIGGER TYPE
     interaction_coordinator.handle_external_trigger(
         session_id=session_id,
         event_type="new_message",
@@ -227,15 +224,15 @@ def send_message(session_id):
 @app.route('/stream/<session_id>')
 def stream(session_id):
     """SSE stream endpoint for a specific session."""
-    # <<< Add app context for initial DB check >>>
+
     with app.app_context():
         db = database.get_db()
         if not db.execute('SELECT 1 FROM sessions WHERE session_id = ?', (session_id,)).fetchone():
             error_data = json.dumps({'error': 'Session not found'})
-            # Return immediately with error response
+            
             return Response(f"event: error\ndata: {error_data}\n\n", mimetype='text/event-stream', status=404)
 
-    # Continue if session exists
+    
     client_id = str(uuid.uuid4())
     sse_queue = interaction_coordinator.add_sse_client(session_id, client_id)
     if sse_queue is None:
@@ -245,13 +242,12 @@ def stream(session_id):
     print(f"--- APP [{session_id}]: SSE client connected: {client_id}")
 
     def event_generator():
-        # <<< Add app context for robustness during cleanup (optional but recommended) >>>
+        
         with app.app_context():
             try:
                 while True:
                     event_data = None
                     try:
-                        # Use a slightly longer timeout to reduce keep-alive frequency if needed
                         event_data = sse_queue.get(timeout=1)
                     except queue.Empty:
                         yield ": keep-alive\n\n"
@@ -273,7 +269,7 @@ def stream(session_id):
                  print(f"!!! ERROR in SSE generator for {session_id}/{client_id}: {e}")
                  traceback.print_exc()
             finally:
-                # This runs within the app context pushed above
+                
                 print(f"--- APP [{session_id}]: Removing SSE client from InteractionCoordinator: {client_id}")
                 interaction_coordinator.remove_sse_client(session_id, client_id)
 

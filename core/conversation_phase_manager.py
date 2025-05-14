@@ -55,8 +55,7 @@ class ConversationPhaseManager:
             return "1", {}
 
         last_known_phase_id = state_row['current_phase_id'] or "1"
-        # The user's log had "last known phase id ", state_row['current_phase_id']
-        # This will be printed later in get_phase_context or mark_task_complete if needed by those methods' specific logic
+        
         
         raw_db_metadata = state_row['metadata']
         metadata = {}
@@ -77,7 +76,7 @@ class ConversationPhaseManager:
             completed_tasks_map = {}
         
         # Ensure all values in completed_tasks_map are lists
-        for phase_key in list(completed_tasks_map.keys()): # Iterate over a copy of keys for safe modification
+        for phase_key in list(completed_tasks_map.keys()): 
             if not isinstance(completed_tasks_map[phase_key], list):
                 print(f"!!! WARN [PhaseManager - {session_id}]: Tasks for phase {phase_key} in DB metadata was not a list: {completed_tasks_map[phase_key]}. Correcting to empty list.")
                 completed_tasks_map[phase_key] = []
@@ -102,7 +101,7 @@ class ConversationPhaseManager:
             else:
                 print(f"!!! WARN [PhaseManager - {session_id}]: Existing metadata from DB is of unexpected type during update: {type(raw_current_db_metadata)}. Starting fresh metadata.")
 
-        # Ensure 'completed_tasks' key exists and is a dict
+        
         if "completed_tasks" not in existing_metadata or not isinstance(existing_metadata["completed_tasks"], dict):
              existing_metadata["completed_tasks"] = {}
         
@@ -110,7 +109,7 @@ class ConversationPhaseManager:
         # Ensure values in completed_tasks_map_to_save are lists and deduplicated
         for phase_id, tasks in completed_tasks_map_to_save.items():
             if isinstance(tasks, list):
-                existing_metadata["completed_tasks"][phase_id] = list(set(str(t) for t in tasks)) # Ensure string IDs and unique
+                existing_metadata["completed_tasks"][phase_id] = list(set(str(t) for t in tasks)) 
             else:
                 print(f"!!! WARN [PhaseManager - {session_id}]: Tasks for phase {phase_id} in completed_tasks_map_to_save is not a list: {tasks}. Retaining existing or initializing as empty list.")
                 if phase_id not in existing_metadata["completed_tasks"] or not isinstance(existing_metadata["completed_tasks"][phase_id], list):
@@ -120,7 +119,7 @@ class ConversationPhaseManager:
         try:
             db.execute(
                 "UPDATE sessions SET current_phase_id = ?, metadata = ? WHERE session_id = ?",
-                (new_phase_id_to_set_in_db, json.dumps(existing_metadata), session_id) # Ensure metadata is JSON string
+                (new_phase_id_to_set_in_db, json.dumps(existing_metadata), session_id)
             )
             db.commit()
             print(f"--- PHASE_MGR [{session_id}]: Updated session state in DB - Phase: {new_phase_id_to_set_in_db}, Metadata tasks: {existing_metadata.get('completed_tasks')}")
@@ -149,9 +148,9 @@ class ConversationPhaseManager:
         for task_dict in tasks_in_phase:
             task_id = task_dict.get('id')
             task_desc = task_dict.get('description')
-            if task_id is None or task_desc is None: continue # Skip malformed tasks
+            if task_id is None or task_desc is None: continue 
 
-            is_done = str(task_id) in [str(cid) for cid in completed_ids_for_this_phase] # Compare as strings
+            is_done = str(task_id) in [str(cid) for cid in completed_ids_for_this_phase] 
             marker = "[X]" if is_done else "[ ]"
             next_marker = ""
             if not is_done and not next_task_found:
@@ -163,10 +162,8 @@ class ConversationPhaseManager:
         return "\n".join(status_lines)
 
     def mark_task_complete(self, session_id: str, task_id_to_complete: str):
-        # This method is called within an app_context by get_phase_context
         current_phase_id_from_db, completed_tasks_map = self._get_session_state(session_id)
-        # The user's original log print "last known phase id ", state_row['current_phase_id']
-        # would effectively be:
+        
         print(f"Debug (mark_task_complete): last known phase id from DB is '{current_phase_id_from_db}' for session '{session_id}' when attempting to mark task '{task_id_to_complete}'.")
 
 
@@ -187,13 +184,13 @@ class ConversationPhaseManager:
             completed_tasks_map[phase_to_update_tasks_for] = []
 
         defined_tasks_for_phase_map = self.phases[phase_to_update_tasks_for].get('_task_map', {})
-        if str(task_id_to_complete) not in defined_tasks_for_phase_map: # Compare as string
+        if str(task_id_to_complete) not in defined_tasks_for_phase_map: 
             print(f"!!! WARN [PhaseManager - {session_id}]: Task ID '{task_id_to_complete}' is not a defined task for phase '{phase_to_update_tasks_for}'. Defined tasks: {list(defined_tasks_for_phase_map.keys())}. Skipping task mark.")
             return
 
         str_task_id_to_complete = str(task_id_to_complete)
-        if str_task_id_to_complete not in [str(t) for t in completed_tasks_map[phase_to_update_tasks_for]]: # Compare as strings
-            completed_tasks_map[phase_to_update_tasks_for].append(str_task_id_to_complete) # Store as string
+        if str_task_id_to_complete not in [str(t) for t in completed_tasks_map[phase_to_update_tasks_for]]: 
+            completed_tasks_map[phase_to_update_tasks_for].append(str_task_id_to_complete) 
             print(f"--- PHASE_MGR [{session_id}]: Marking task '{str_task_id_to_complete}' as complete for phase '{phase_to_update_tasks_for}'.")
             self._update_session_state(session_id, current_phase_id_from_db, completed_tasks_map)
         else:
@@ -216,7 +213,7 @@ class ConversationPhaseManager:
 
             current_stage_desc_prompt = f"Giai đoạn hiện tại (ID: {last_known_phase_id}): {current_phase_def_for_llm_prompt.get('name', '')}\n"
             current_stage_desc_prompt += f"Mô tả giai đoạn: {current_phase_def_for_llm_prompt.get('description', '')}\n"
-            current_stage_desc_prompt += "Danh sách nhiệm vụ của giai đoạn này (ID, trạng thái [X] Hoàn thành / [ ] Chưa, và mô tả):\n"
+            current_stage_desc_prompt += "Danh sách nhiệm vụ của giai đoạn này (ID, trạng thái `[X] - Hoàn thành` / `[ ] - Chưa Hoàn thành`, và mô tả):\n"
             
             tasks_for_llm_prompt = current_phase_def_for_llm_prompt.get('tasks', [])
             completed_ids_for_this_phase_in_prompt = []
@@ -259,7 +256,7 @@ class ConversationPhaseManager:
                 raw_response = self.llm_service.generate(prompt)
                 raw_response_for_log = raw_response
                 print(f"--- PHASE_MGR [{session_id}]: Raw LLM Signal Response: {raw_response}")
-                # Attempt to find JSON block if LLM wraps it
+                
                 json_match = None
                 try:
                     # More robust JSON extraction
@@ -269,15 +266,15 @@ class ConversationPhaseManager:
                         json_str_candidate = raw_response[start_index:end_index]
                         parsed_output = json.loads(json_str_candidate)
                         json_match = True
-                    else: # Fallback to simpler cleaning if no clear {} block
+                    else: 
                         clean_response = raw_response.strip().replace("```json", "").replace("```", "").replace("{{", "{").replace("}}", "}")
                         parsed_output = json.loads(clean_response)
 
-                except json.JSONDecodeError as je: # Catch only JSON decode errors here
+                except json.JSONDecodeError as je:
                     print(f"!!! WARN [PhaseManager - {session_id}]: Failed to parse LLM JSON response: {je}. Raw: {raw_response_for_log}")
-                    # Keep defaults, don't re-raise broadly here.
+                    
 
-                if json_match or 'parsed_output' in locals(): # Check if parsed_output was successfully created
+                if json_match or 'parsed_output' in locals(): 
                     signal_data = parsed_output.get("signal")
                     raw_completed_task_ids_from_llm = parsed_output.get("completed_task_ids", [])
                     
@@ -294,7 +291,7 @@ class ConversationPhaseManager:
                     
                     print(f"--- PHASE_MGR [{session_id}]: LLM Signal: '{llm_determined_signal_text}'. Tasks suggested by LLM: {completed_task_ids_from_llm}.")
             
-            except Exception as e: # Catch other errors from LLM call or broader parsing issues
+            except Exception as e: 
                 print(f"!!! ERROR [PhaseManager - {session_id}]: General error during LLM interaction or parsing: {e}. Raw: {raw_response_for_log}")
                 traceback.print_exc()
 
@@ -317,7 +314,7 @@ class ConversationPhaseManager:
             final_phase_id_for_context = current_phase_id_for_logic
             final_completed_tasks_map_for_context = json.loads(json.dumps(completed_tasks_map_after_llm_updates)) # Deep copy
 
-            if llm_determined_signal_text == "Chuyển stage mới":
+            if llm_determined_signal_text == "Chuyển stage mới" or signal_data[1] == "4":
                 tasks_in_current_phase_logic_def = self.phases.get(current_phase_id_for_logic, {}).get('tasks', [])
                 defined_task_ids_current_phase_logic = {str(t['id']) for t in tasks_in_current_phase_logic_def if isinstance(t, dict) and 'id' in t}
                 
@@ -360,8 +357,7 @@ class ConversationPhaseManager:
             tasks_for_ui_display = []
             defined_tasks_in_final_phase = final_phase_data_def.get('tasks', [])
             
-            # The log line from user: --- PHASE_MGR [2c51...]: Raw defined tasks for this phase from config: [...]
-            # This corresponds to `defined_tasks_in_final_phase` here.
+            
             print(f"--- PHASE_MGR [{session_id}]: Preparing tasks for UI. Final Phase ID: {final_phase_id_for_context}")
             print(f"--- PHASE_MGR [{session_id}]: Final phase data definition from config: {final_phase_data_def.get('name', 'N/A')}, Tasks: {defined_tasks_in_final_phase}")
             # print(f"--- PHASE_MGR [{session_id}]: Raw defined tasks for this phase from config: {defined_tasks_in_final_phase}") # Original log line
@@ -469,7 +465,7 @@ class ConversationPhaseManager:
 
                 try:
                     # Attempt to find JSON block
-                    json_str_candidate = raw_response # Default to full response
+                    json_str_candidate = raw_response 
                     start_index = raw_response.find('{')
                     end_index = raw_response.rfind('}') + 1
                     if start_index != -1 and end_index != 0 and end_index > start_index:

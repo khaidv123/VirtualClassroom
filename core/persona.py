@@ -11,5 +11,5 @@ class Persona:
     backstory: str = ""
     tasks: str = "" 
     personality_traits: List[str] = field(default_factory=list)
-    model: str = "gemini-2.0-flash" # Default model
+    model: str = "gemini-2.0-flash" 
     tools: List[str] = field(default_factory=list)

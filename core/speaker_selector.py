@@ -3,8 +3,8 @@ import random
 import json
 import traceback
 from typing import List, Dict, Any, Optional, Tuple
-from core.conversation_history import ConversationHistory # Keep for history formatting
-from services.llm_service import LLMService # Added
+from core.conversation_history import ConversationHistory 
+from services.llm_service import LLMService 
 from core.prompts import *
 
 
@@ -13,8 +13,7 @@ class SpeakerSelector:
         self.problem = problem_description
         self.llm_service = llm_service
         self.config = config or {}
-        self.lambda_weight = self.config.get("lambda_weight", 0.5)
-        # No direct app instance needed here unless _call_evaluator_llm needs context for some reason
+        self.lambda_weight = self.config.get("lambda_weight", 0.6)
 
     def _format_history_for_prompt(self, history: List[Dict], count=15) -> str:
         recent_history = history[-count:]
@@ -34,8 +33,7 @@ class SpeakerSelector:
 
     def _call_evaluator_llm(self, prompt: str) -> List[Dict[str, Any]]:
         """Calls the LLM to get evaluation scores."""
-        # This method itself doesn't need app context unless LLMService uses 'g'
-        # Assuming LLMService uses its own client directly.
+        
         print("--- SPEAKER_SELECTOR: Requesting evaluation from LLM...")
         try:
             raw_response = self.llm_service.generate(prompt)
@@ -69,7 +67,7 @@ class SpeakerSelector:
                        session_id: str,
                        thinking_results: List[Dict[str, Any]],
                        phase_context: Dict,
-                       conversation_history: List[Dict]) -> Dict[str, Any]: # Takes history LIST now
+                       conversation_history: List[Dict]) -> Dict[str, Any]: 
         """Selects the best agent to act for the session."""
         log_prefix = f"--- SPEAKER_SELECTOR [{session_id}]"
         print(f"{log_prefix}: Evaluating {len(thinking_results)} thinking results...")
@@ -92,17 +90,16 @@ class SpeakerSelector:
             list_AI_name=", ".join([res['agent_name'] for res in agents_wanting_to_speak]),
             problem=self.problem,
             current_stage_description=phase_desc_prompt.strip(),
-            history=self._format_history_for_prompt(conversation_history), # Use passed list
+            history=self._format_history_for_prompt(conversation_history), 
             AI_thoughts=self._format_thoughts_for_prompt(agents_wanting_to_speak)
         )
 
-        # Get scores from LLM (No app context needed here directly)
+        # Get scores from LLM
         llm_scores = self._call_evaluator_llm(prompt)
         if not llm_scores:
             print(f"{log_prefix}: Failed to get valid scores from LLM.")
             return {}
 
-        # Combine scores
         evaluated_results = []
         llm_scores_map = {score['name']: score for score in llm_scores}
         for result in agents_wanting_to_speak:
@@ -125,7 +122,7 @@ class SpeakerSelector:
         evaluated_results.sort(key=lambda x: x["final_score"], reverse=True)
         selected_agent_result = evaluated_results[0]
         # Add threshold check if needed:
-        # score_threshold = self.config.get("min_speak_score", 2.5) # Example threshold
+        # score_threshold = self.config.get("min_speak_score", 2.5) # Threshold
         # if selected_agent_result["final_score"] < score_threshold:
         #     print(f"{log_prefix}: Highest score {selected_agent_result['final_score']:.2f} below threshold {score_threshold}. No speaker selected.")
         #     return {}

@@ -13,6 +13,8 @@
 
 3. Chỉnh time sleep trước event để 
 
+4. Chưa trigger "slence pause"
+
 
 ## Stage management
 1. Code để dựa vào context có sẵn (problem, solution) để **tạo** ra các phases/stages --> ``Materials Content Generator Module``?
@@ -55,7 +57,7 @@
 1. Kiểm tra lại đây có phải THO của agent đó hay của chung các agent?
 
 
-2. Có nên cho agent thấy được suy nghĩ của các agent khác =)))?
+2. Có nên cho agent thấy được suy nghĩ của các agent khác?
 
 
 3. Chưa có "Poor Thinking"

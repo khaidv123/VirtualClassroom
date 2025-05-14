@@ -4,18 +4,17 @@ import random
 import threading
 import json
 import traceback
-import re # Import regex for parsing
+import re 
 from typing import TYPE_CHECKING, Dict, Any, List
 
 from flask import Flask
-from services.llm_service import LLMService # Added
+from services.llm_service import LLMService 
 from utils.helpers import parse_output
-
 from core.prompts import *
 
 if TYPE_CHECKING:
     from core.interaction_coordinator import InteractionCoordinator
-    from core.agent_manager import AgentManager # Import for type hinting
+    from core.agent_manager import AgentManager 
 
 
 
@@ -28,11 +27,10 @@ class BehaviorExecutor:
                  app_instance: Flask):
         self.interaction_coordinator = interaction_coordinator
         self.problem = problem_description
-        self._original_llm_service_input = llm_service # Store original input
+        self._original_llm_service_input = llm_service 
         self.agent_manager = agent_manager
-        self.app = app_instance # Store app instance
+        self.app = app_instance
 
-    # Helper to handle potential tuple issue
     def _get_llm_service(self) -> LLMService:
         if isinstance(self._original_llm_service_input, tuple):
             print("!!! WARN [BehaviorExecutor]: LLM Service was passed as a tuple, unpacking.")
@@ -87,7 +85,7 @@ class BehaviorExecutor:
         )
 
         try:
-            llm_service_instance = self._get_llm_service() # Use helper
+            llm_service_instance = self._get_llm_service() 
             raw_response = llm_service_instance.generate(prompt)
             print(f"{log_prefix}: Raw LLM Speak Response: {raw_response}")
 
@@ -98,7 +96,7 @@ class BehaviorExecutor:
                     print(f"!!! WARN [{log_prefix}]: LLM returned empty 'spoken_message'.")
                     return ""
                 return final_message
-            except Exception as parse_err: # Catch JSONDecodeError and others
+            except Exception as parse_err: 
                 print(f"!!! ERROR [{log_prefix}]: Failed to parse LLM JSON Speak response: {parse_err}")
                 print(f"Raw response was: {raw_response}")
                 return "..."
@@ -111,9 +109,9 @@ class BehaviorExecutor:
     def _simulate_typing_and_speak(self, session_id: str, agent_id: str, agent_name: str, thought_details: Dict, phase_context: Dict, history: List[Dict]):
         """Generates message, simulates typing, and posts the message for a session."""
         log_prefix = f"--- BEHAVIOR_EXECUTOR [{agent_name} - {session_id}]"
-        app = self.app # Use stored app instance
+        app = self.app 
 
-        # Generate message (no context needed directly here)
+        
         final_message = self._generate_final_message(session_id, agent_id, agent_name, thought_details, phase_context, history)
 
         if not final_message:
@@ -133,7 +131,7 @@ class BehaviorExecutor:
         with app.app_context():
             try:
                 print(f"{log_prefix}: Executing 'speak' action with message: {final_message}")
-                # This call triggers DB access via add_event
+    
                 self.interaction_coordinator.handle_internal_trigger(
                     session_id=session_id, event_type="new_message", source=agent_id,
                     content={"text": final_message, "sender_name": agent_name}
@@ -170,7 +168,7 @@ class BehaviorExecutor:
 
         elif action == "listen":
             print(f"{log_prefix}: Executing 'listen' action (no operation).")
-            post_idle() # Set status to idle immediately
+            post_idle() 
         else:
             print(f"{log_prefix}: Unknown action '{action}'.")
-            post_idle() # Set status to idle for unknown actions
+            post_idle() 

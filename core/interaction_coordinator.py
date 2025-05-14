@@ -59,7 +59,7 @@ class InteractionCoordinator:
             "source": source,
             "content": content,
             "session_id": session_id,
-            "metadata": metadata or {} # Include metadata if provided
+            "metadata": metadata or {} 
         }
         sse_payload = {"event": event_type, "data": sse_data}
 
@@ -83,7 +83,7 @@ class InteractionCoordinator:
         else:
             print(f"--- INT_COORD [{session_id}]: Warning - Orchestrator not set for delayed trigger.")
             
-    # --- Trigger Handling (Session Aware) ---
+    # --- Trigger Handling ---
     def handle_external_trigger(self, session_id: str, event_type: str, source: str, content: Dict):
         print(f"--- INT_COORD [{session_id}]: Received EXTERNAL trigger: Type={event_type}, Source={source}")
         # Log event first (needs app context via ConversationHistory methods)
@@ -111,7 +111,7 @@ class InteractionCoordinator:
             logged_event = self.conv_history.add_event(session_id, event_type, source, content)
             if not logged_event: return
 
-                # Broadcast logged internal events
+            # Broadcast logged internal events
             self.post_event_to_clients(session_id, event_type, source, content, metadata=logged_event.get("metadata"))
 
             # PAUSE
@@ -124,7 +124,6 @@ class InteractionCoordinator:
             self.response_orchestrator.process_event(session_id=session_id, triggering_event=logged_event)
 
         elif event_type == "agent_status":
-            # Broadcast non-logged status updates
             self.post_event_to_clients(session_id, event_type, source, content, is_internal=True)
         else:
             print(f"--- INT_COORD [{session_id}]: Handling internal event type {event_type} (no DB log/broadcast/trigger).")

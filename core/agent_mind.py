@@ -36,14 +36,17 @@ class AgentMind:
         lines = [f"THO#{thought['id']}: {thought['text']}" for thought in recent_thoughts]
         return "\n".join(lines) if lines else "Chưa có suy nghĩ trước đó."
 
-    def _build_inner_thought_prompt(self, triggering_event: Dict, history: List[Dict], phase_context: Dict, task_status_prompt: str) -> str:
-        # Format phase description (excluding tasks now, as they are in status)
+    def _build_inner_thought_prompt(self, triggering_event: Dict, history: List[Dict], phase_context: Dict, task_status_prompt: str, score = 4.0) -> str:
+        # Format phase description
         phase_desc_prompt = f"Stage {phase_context.get('id', 'N/A')}: {phase_context.get('name', '')}\n"
         phase_desc_prompt += f"Description: {phase_context.get('description', '')}\n"
         phase_desc_prompt += "Goals:\n" + "\n".join([f"- {g}" for g in phase_context.get('goals', [])])
 
         # Poor thinking
         poor_thinking = ""
+        if score < 2.0:
+            poor_thinking = "Những suy nghĩ gần đây của bạn bị đánh giá **kém**, vì bạn thực hiện đã những hành động, lời nói **LẶP LẠI hoặc có NỘI DUNG TƯƠNG TỰ** nhiều lần mà KHÔNG giúp ích cho sự tham gia của các bạn học khác. Bạn cần lập tức thay đổi cách suy nghĩ cho đa dạng, phù hợp hơn dựa theo hướng dẫn."
+
 
         # ai_description
         ai_desc_prompt = f"Role: {self.persona.role}\nGoal: {self.persona.goal}\nBackstory: {self.persona.backstory}\nFunctions: {self.persona.tasks}" 
@@ -60,6 +63,7 @@ class AgentMind:
                 poor_thinking = poor_thinking
             )
             return prompt
+        
         except KeyError as e:
             print(f"!!! ERROR [AgentMind - {self.persona.name}]: Missing key in AGENT_INNER_THOUGHTS_PROMPT format: {e}")
             return f"Lỗi tạo prompt: Thiếu key {e}"
@@ -75,19 +79,17 @@ class AgentMind:
 
         log_prefix = f"--- AGENT_MIND [{self.persona.name} - {session_id}]"
 
-        # Use the stored app instance
         with self.app.app_context():
             try:
                 print(f"{log_prefix}: Starting thinking process...")
-                # Fetch history and phase within context
                 recent_history = conversation_history.get_history(session_id=session_id, count=100)
                 current_phase_context = phase_manager.get_phase_context(session_id, conversation_history)
 
                 prompt = self._build_inner_thought_prompt(
                     triggering_event,
                     recent_history,
-                    current_phase_context, # Pass the whole context dict
-                    current_phase_context.get("task_status_prompt", "Lỗi: Không có trạng thái nhiệm vụ.") # Extract status from context
+                    current_phase_context, 
+                    current_phase_context.get("task_status_prompt", "Lỗi: Không có trạng thái nhiệm vụ.")
                 )
 
                 # LLM Call

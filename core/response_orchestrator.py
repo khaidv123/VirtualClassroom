@@ -25,7 +25,7 @@ class ResponseOrchestrator:
                  behavior_executor: BehaviorExecutor,
                  interaction_coordinator: 'InteractionCoordinator',
                  problem_description: str,
-                 app_instance: Flask): # Added app_instance
+                 app_instance: Flask): 
         self.conv_history = conversation_history
         self.phase_manager = phase_manager
         self.agent_manager = agent_manager
@@ -33,7 +33,7 @@ class ResponseOrchestrator:
         self.behavior_executor = behavior_executor
         self.interaction_coordinator = interaction_coordinator
         self.problem = problem_description
-        self.app = app_instance # Store app instance
+        self.app = app_instance 
         self._lock = threading.Lock()
 
     def _process_in_thread(self, session_id: str, triggering_event: Dict):
@@ -58,26 +58,23 @@ class ResponseOrchestrator:
                 # Get Phase Context (needs context for DB access)
                 current_phase_context = self.phase_manager.get_phase_context(session_id, self.conv_history)
 
-                # <<< NEW: Send stage update to clients >>>
+                # Send stage update to clients 
                 if current_phase_context and 'id' in current_phase_context:
-                    # --- NEW: Weighted progress calculation ---
+                    # --- Weighted progress calculation ---
                     all_phases_dict = self.phase_manager.phases
-                    sorted_phase_ids = sorted(all_phases_dict.keys()) # Assuming keys like "1", "2", "3", "4" sort naturally
+                    sorted_phase_ids = sorted(all_phases_dict.keys()) 
                     num_main_stages = len(sorted_phase_ids)
                     
-                    # progress_percent_for_bar sẽ giữ kết quả cuối cùng
                     progress_percent_for_bar = 0.0 
 
                     if num_main_stages > 0:
                         progress_per_main_stage_completion = 100.0 / num_main_stages
-                        # Sử dụng một biến cục bộ cho việc tính toán trong vòng lặp
                         current_calculation_accumulated_progress = 0.0 
                         current_stage_id_str = str(current_phase_context.get("id"))
                         completed_tasks_map_from_context = current_phase_context.get('completed_tasks_map', {})
                         
                         log_prefix_calc = f"--- RESP_ORCH_WEIGHTED_CALC [{session_id}]"
                         print(f"{log_prefix_calc}: Starting weighted progress. Num main stages: {num_main_stages}, Progress per stage: {progress_per_main_stage_completion:.2f}%")
-                        # Log thêm để kiểm tra completed_tasks_map_from_context nếu cần
                         # print(f"{log_prefix_calc}: Initial completed_tasks_map_from_context: {completed_tasks_map_from_context}")
 
                         for phase_id_str in sorted_phase_ids:
@@ -106,11 +103,11 @@ class ResponseOrchestrator:
                                 if num_tasks_in_this_phase > 0:
                                     completion_ratio_current_stage = num_completed_tasks_in_this_phase / num_tasks_in_this_phase
                                     progress_for_this_stage_segment = completion_ratio_current_stage * progress_per_main_stage_completion
-                                elif num_tasks_in_this_phase == 0: # Stage hiện tại không có task, coi như hoàn thành phần của nó
+                                elif num_tasks_in_this_phase == 0: 
                                     completion_ratio_current_stage = 1.0
                                     progress_for_this_stage_segment = progress_per_main_stage_completion
                                 
-                                progress_before_current_segment = current_calculation_accumulated_progress # Giá trị trước khi cộng stage hiện tại
+                                progress_before_current_segment = current_calculation_accumulated_progress 
                                 current_calculation_accumulated_progress += progress_for_this_stage_segment
                                 
                                 print(f"{log_prefix_calc}:   -> Current stage '{phase_id_str}'. Num tasks in this phase: {num_tasks_in_this_phase}, Num completed: {num_completed_tasks_in_this_phase}. Progress for this stage segment: {completion_ratio_current_stage:.2f} * {progress_per_main_stage_completion:.2f} = {progress_for_this_stage_segment:.2f}%")
@@ -118,22 +115,19 @@ class ResponseOrchestrator:
                                 print(f"{log_prefix_calc}:   Breaking after current stage '{phase_id_str}'.")
                                 break 
                             else: 
-                                # Future stage, not yet contributing to accumulated progress for the bar
+                                
                                 print(f"{log_prefix_calc}:   -> Future stage '{phase_id_str}'. Stopping calculation for bar.")
                                 break 
                         
-                        # GÁN GIÁ TRỊ QUAN TRỌNG:
-                        # Sau khi vòng lặp kết thúc (hoặc break), gán kết quả tính toán được cho progress_percent_for_bar
+                        
                         progress_percent_for_bar = current_calculation_accumulated_progress
                     
-                    # --- NEW: KIỂM TRA VÀ GHI ĐÈ NẾU STAGE HIỆN TẠI LÀ STAGE CUỐI VÀ ĐÃ HOÀN THÀNH ---
-                    if sorted_phase_ids: # Đảm bảo danh sách phase không rỗng
+                    if sorted_phase_ids: 
                         last_stage_id_in_process = sorted_phase_ids[-1]
                         current_stage_id_from_context = str(current_phase_context.get("id"))
 
                         if current_stage_id_from_context == last_stage_id_in_process:
-                            # Stage hiện tại đang active chính là stage cuối cùng của toàn bộ quy trình
-                            # Kiểm tra xem stage cuối này đã hoàn thành chưa
+                            
                             tasks_in_current_last_stage = all_phases_dict[current_stage_id_from_context].get('tasks', [])
                             num_total_tasks_in_current_last_stage = len(tasks_in_current_last_stage)
                             
@@ -149,21 +143,21 @@ class ResponseOrchestrator:
                     # --- END NEW ---
 
                     print(f"{log_prefix_calc}: Final weighted progress_percent_for_bar (to be sent): {progress_percent_for_bar:.2f}%")
-                    # <<< NEW: Get main stage display info >>>
+                    # Get main stage display info
                     main_stage_markers = []
                     for stage_id_key in sorted_phase_ids:
                         main_stage_markers.append({
                             "id": stage_id_key,
-                            "name": all_phases_dict[stage_id_key].get("name", f"Giai đoạn {stage_id_key}") # Or just the ID
+                            "name": all_phases_dict[stage_id_key].get("name", f"Giai đoạn {stage_id_key}") 
                         })
-                    # <<< END NEW >>>
+                    
 
                     stage_update_content = {
                         "id": current_phase_context.get("id"),
                         "name": current_phase_context.get("name"),
                         "description": current_phase_context.get("description", ""),
                         "tasks": current_phase_context.get("tasks_for_display", []),
-                        "progress_bar_percent": progress_percent_for_bar, # Sử dụng giá trị đã được gán đúng
+                        "progress_bar_percent": progress_percent_for_bar, 
                         "main_stage_markers": main_stage_markers
                     }
                     self.interaction_coordinator.post_event_to_clients(
@@ -173,9 +167,9 @@ class ResponseOrchestrator:
                         content=stage_update_content,
                         is_internal=True
                     )
-                # <<< END NEW >>>
                 
-                # Get History (needs context for DB access)
+                
+                
                 current_history = self.conv_history.get_history(session_id=session_id)
                 
                 # Trigger Parallel Thinking (AgentManager needs context pushed in its threads)
@@ -191,7 +185,7 @@ class ResponseOrchestrator:
                     session_id=session_id,
                     thinking_results=thinking_results,
                     phase_context=current_phase_context,
-                    conversation_history=current_history # Pass the list
+                    conversation_history=current_history 
                 )
 
                 # Trigger Execution (BehaviorExecutor needs context pushed in its threads)

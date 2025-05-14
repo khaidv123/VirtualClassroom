@@ -16,7 +16,7 @@ class AgentManager:
         self.llm_service = llm_service
         self.app = app_instance # Store app instance
         self.agents: Dict[str, AgentMind] = self._load_agents(persona_config_path)
-        # Adjust max_workers if needed, default to number of agents
+        
         num_workers = len(self.agents) if self.agents else 1
         self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=num_workers)
         print(f"--- AGENT_MGR: Initialized with {len(self.agents)} agents and {num_workers} workers.")
@@ -29,7 +29,7 @@ class AgentManager:
                  print(f"!!! WARN [AgentManager]: No personas loaded from {config_path}.")
                  return {}
             for agent_id, persona in personas.items():
-                 # Pass self.app to AgentMind constructor
+                 
                  agents[agent_id] = AgentMind(persona, self.problem, self.llm_service, self.app)
                  print(f"--- AGENT_MGR: Loaded AgentMind for {persona.name} ({agent_id})")
         except Exception as e:
@@ -63,7 +63,7 @@ class AgentManager:
             futures.append(future)
 
         results = []
-        # Wait for all futures to complete
+        # Parallel
         for future in concurrent.futures.as_completed(futures):
             try:
                 result = future.result()
@@ -71,7 +71,7 @@ class AgentManager:
                     results.append(result)
             except Exception as e:
                 print(f"!!! ERROR [{log_prefix}]: Agent thinking task failed: {e}")
-                traceback.print_exc() # Print full traceback for thread errors
+                traceback.print_exc() 
 
         print(f"{log_prefix}: Collected {len(results)} thinking results.")
         return results
@@ -79,6 +79,5 @@ class AgentManager:
     def cleanup(self):
         """Shuts down the thread pool executor."""
         print("--- AGENT_MGR: Shutting down thread pool executor...")
-        # Wait for pending tasks to complete before shutting down
         self.executor.shutdown(wait=True)
         print("--- AGENT_MGR: Executor shut down.")

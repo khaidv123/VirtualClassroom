@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let messageCounter = 0;
     let currentTypingAgents = new Set();
     let agentStatuses = {};
-    let eventSource = null; // Initialize eventSource to null
+    let eventSource = null; 
 
     // --- Get session ID and username from HTML data attributes ---
     const currentSessionId = container?.dataset.sessionId;
@@ -38,8 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!currentSessionId) {
         console.error("CRITICAL: Session ID not found in HTML. Chat cannot function.");
         alert("Lỗi: Không tìm thấy ID phiên chat. Vui lòng quay lại trang danh sách và bắt đầu phiên mới.");
-        // Optionally redirect: window.location.href = '/';
-        return; // Stop script execution
+        return; 
     }
 
     // --- Functions ---
@@ -52,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // Ensure username is trimmed
         currentUsername = currentUsername.trim();
-        if (!currentUsername) currentUsername = 'Bạn'; // Final fallback
+        if (!currentUsername) currentUsername = 'Bạn'; 
 
         console.log(`Username for session ${currentSessionId}: ${currentUsername}`);
         localStorage.setItem(`chatcollab_username_${currentSessionId}`, currentUsername);
@@ -91,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function escapeHTML(str) {
         const p = document.createElement('p');
-        p.textContent = str || ''; // Ensure str is not null/undefined
+        p.textContent = str || ''; 
         return p.innerHTML;
     }
 
@@ -193,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const panel = document.querySelector('.status');
         if (!panel || !connectionStatusIcon || !statusText || !messageInput || !sendButton) return;
         panel.classList.remove('connecting','connected','disconnected');
-        messageInput.disabled = true; // Disable input by default
+        messageInput.disabled = true; 
         sendButton.disabled = true;
 
         switch(status) {
@@ -201,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 connectionStatusIcon.style.color = 'var(--success-color)';
                 statusText.textContent = 'Đã kết nối';
                 panel.classList.add('connected');
-                messageInput.disabled = false; // Enable input on connection
+                messageInput.disabled = false; 
                 sendButton.disabled = false;
                 break;
             case 'disconnected':
@@ -217,10 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function sendMessage() {
-        if (!messageInput || !sendButton) return; // Check elements exist
+        if (!messageInput || !sendButton) return; 
 
         const text = messageInput.value.trim();
-        if (!currentUsername) initializeUserDisplay(); // Make sure username is set
+        if (!currentUsername) initializeUserDisplay(); 
         if (!text || messageInput.disabled) return;
 
         messageInput.disabled = true;
@@ -235,12 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => {
             if (!res.ok) {
                 console.error('Send error status:', res.status, res.statusText);
-                // Try to get error message from response body
                 return res.json().catch(() => ({ error: res.statusText })).then(errData => {
                     throw new Error(errData.error || 'Unknown error');
                 });
             }
-            // Success is handled by SSE echo
+            
         })
         .catch(err => {
             console.error('Send error:', err);
@@ -296,8 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.download = `chat-${currentUsername}-${currentSessionId.slice(0,8)}.txt`;
                 document.body.appendChild(link);
                 link.click();
-                link.remove(); // Clean up the link element
-                URL.revokeObjectURL(link.href); // Free up memory
+                link.remove(); 
+                URL.revokeObjectURL(link.href); 
             })
             .catch(err => {
                 console.error("Export error:", err);
@@ -307,18 +305,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Server-Sent Events (SSE) Setup ---
     function connectSSE() {
-        if (eventSource?.readyState === EventSource.OPEN) return; // Already open
+        if (eventSource?.readyState === EventSource.OPEN) return; 
 
         updateConnectionStatus('connecting');
         eventSource = new EventSource(`/stream/${currentSessionId}`);
 
         eventSource.onopen = () => {
             updateConnectionStatus('connected');
-            initializeUserDisplay(); // Initialize user display info
-            initializeAgentStatuses(); // Initialize agent display info
-            renderMathInElement(problemDisplayEl); // Render problem math
+            initializeUserDisplay(); 
+            initializeAgentStatuses(); 
+            renderMathInElement(problemDisplayEl); 
 
-            // Fetch initial chat history
+        
             fetch(`/history/${currentSessionId}`)
                 .then(r => {
                     if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
@@ -327,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(history => {
                     if (chatbox) chatbox.innerHTML = '';
                     messageCounter = 0;
-                    history.forEach(displayMessage); // displayMessage handles math rendering
+                    history.forEach(displayMessage); 
                     if (messageInput) messageInput.focus();
                 })
                 .catch(err => {
@@ -363,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         eventSource.addEventListener('agent_status', e => {
             try {
                 const eventData = JSON.parse(e.data);
-                const update = eventData.content; // Status data is inside content
+                const update = eventData.content; 
                 const { agent_name: name, status } = update;
                 if (name && status && agentStatuses.hasOwnProperty(name)) {
                     agentStatuses[name] = status;
@@ -395,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log(`[STAGE_UPDATE] Progress bar: Using weighted progress_bar_percent = ${progressPercent.toFixed(2)}%`);
                         progressFillEl.style.width = `${Math.min(100, Math.max(0, progressPercent))}%`;
                         
-                        // NEW: Hiển thị phần trăm hoàn thành
+                        // NEW: Show percentage complete
                         if (progressPercentEl) {
                             progressPercentEl.textContent = `(${Math.round(progressPercent)}%)`;
                         }
@@ -470,9 +468,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-    } // End connectSSE
+    } 
 
     // --- Initial Load ---
-    connectSSE(); // Start connection
+    connectSSE(); 
 
-}); // End DOMContentLoaded
+}); 

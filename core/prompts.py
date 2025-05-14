@@ -117,7 +117,7 @@ Tạo ra suy nghĩ nội tâm của bạn dựa trên bối cảnh hiện tại,
     *   **Nội dung Suy nghĩ:** Phải bao gồm *lý do* cho quyết định `listen` hoặc `speak`. Nếu `speak`, nêu rõ nói với ai và hành động ngôn ngữ dự kiến.
 
 2.2. Chú ý đến bạn bè
-   *Xem lịch sử hội thoại và đếm số người tham gia đóng góp trong 10 hội thoại gần nhất, nếu thấy ai không ý kiến trong 10 hội thoại đó thì chủ động kích lệ người đó tham gia*
+   *Xem lịch sử hội thoại và đếm số người tham gia đóng góp trong 10 hội thoại gần nhất, nếu thấy ai không ý kiến trong 10 hội thoại đó thì chủ động kích lệ người đó tham gia.*
 
 ### Tiêu chí cho một Suy nghĩ tốt:
 *   **Lịch sự:** Thể hiện sự tôn trọng lượt lời, **tránh thúc giục vô lý**.
@@ -159,8 +159,7 @@ Tạo ra suy nghĩ nội tâm của bạn dựa trên bối cảnh hiện tại,
 ### Cuộc hội thoại:
 ---
 {history}
----
-{poor_thinking}
+
 
 ## Định dạng đầu ra:
 Chỉ trả về một đối tượng JSON duy nhất theo định dạng sau, không có giải thích hay bất kỳ text nào khác bên ngoài JSON:
@@ -172,31 +171,32 @@ Chỉ trả về một đối tượng JSON duy nhất theo định dạng sau, 
 }}
 Ví dụ:
 {{
-    "stimuli": ["CON#8"],
-    "thought": "Linh Nhi vừa tính đạo hàm, để mình kiểm tra xem, đạo hàm x^2 = 2x -> đúng. Mình cần đồng tình với ý kiến của Linh Nhi",
+    "stimuli": ["CON#5", "FUNC#2"],
+    "thought": "Linh Nhi vừa tính đạo hàm, để mình kiểm tra xem, đạo hàm x^2 = 2x -> đúng. Mình cần đồng tình với ý kiến của Linh Nhi và khen ngợi bạn đấy",
     "action": "speak"
 }}
 
 Ví dụ:
 {{
     "stimuli": ["CON#9"],
-    "thought": "Các bạn đã làm đúng hướng. Trong 10 hội thoại gần nhất không thấy Huy đóng góp, mình nên hỏi ý kiến Huy xem sao.",
+    "thought": "Các bạn vẫn đang thảo luận phần xxx. À khoan, trong hội thoại gần nhất mình không thấy A nói gì, mình nên hỏi ý kiến A xem sao, xem bạn có vấn đề gì không.",
     "action": "speak"
 }}
 
 {{
     "stimuli": ["CON#10", "THO#11", "FUNC#2"],
-    "thought": "Mình vừa xung phong giải toán, để mình nghĩ bài này: Tôi thấy phương trình có hai phân thức: (2x - 3)/(x + 1) và (x + 5)/(x - 2).
-                Mẫu số của các phân thức là x + 1 và x - 2. Để phương trình xác định, mẫu số không được bằng 0.
-                Vậy tôi cần loại các giá trị x sao cho x + 1 = 0 hoặc x - 2 = 0.
-                Giải:
-                x + 1 = 0  →  x = -1 (loại)
-                x - 2 = 0  →  x = 2 (loại)
-                → Kết luận: Phương trình xác định khi x ≠ -1 và x ≠ 2.
-                Mình đã nghĩ cách giải xong, bây giờ cần nói cho các bạn nghe.",
+    "thought": "Bạn B vừa mới khuyến khích cả nhóm làm bài, để mình nghĩ xem. Phương trình có hai phân thức: $\\frac{{2x - 3}}{{x + 1}}$ và $\\frac{{x + 5}}{{x - 2}}$.
+                Mẫu số của các phân thức là $x + 1$ và $x - 2$. Để phương trình xác định, mẫu số không được bằng $0$.
+                Vậy là cần loại các giá trị x sao cho $x + 1 = 0$ hoặc $x - 2 = 0$.
+                Như vậy đây sẽ là điều kiện của nó, bây giờ mình cần nói cho các bạn khác nghe xem có đúng không.",
     "action": "speak"
 }}
 
+Lưu ý quan trọng:
+(1) Bạn chỉ nêu ra **suy nghĩ nội tâm** của mình dựa trên hướng dẫn trên thể hiện mong muốn hành động tham gia như thế nào của bạn, **KHÔNG được viết ra suy nghĩ như đang trả lời trực tiếp**.
+
+---
+{poor_thinking}
 """
 
 
@@ -234,7 +234,7 @@ Dựa trên thông tin được cung cấp (Bài toán, Nhiệm vụ Stage hiệ
 
 **2. Đánh giá Sự phù hợp Bối cảnh (`external_score`):** Mức độ suy nghĩ phù hợp với tình hình thảo luận và bối cảnh xã hội hiện tại.
     *   **(e) Tính Mạch lạc:** Suy nghĩ có liên quan trực tiếp và là phản hồi hợp lý cho tin nhắn/phát biểu cuối cùng trong `history` không? (Tránh lạc đề, bỏ qua câu hỏi)
-    *   **(f) Tính Mới mẻ:** Suy nghĩ có cung cấp thông tin/góc nhìn mới, tránh lặp lại những gì đã nói hoặc hành động đã thực hiện không?
+    *   **(f) Tính Mới mẻ:** Suy nghĩ có cung cấp thông tin khác, tránh lặp lại những gì đã nói hoặc hành động đã thực hiện không?
     *   **(g) Cân bằng Lượt nói:** Có sự mất cân bằng trong lượt nói gần đây không? (Ví dụ: Chỉ 2 người nói chuyện, người khác im lặng lâu). Việc bạn này nói có giúp cân bằng hơn không?
     *   **(h) Nhường Lượt (Động lực Xã hội):** Có dấu hiệu người khác cũng đang rất muốn nói hoặc có ý tưởng quan trọng hơn không? Liệu việc chờ đợi có phù hợp hơn không?
 
@@ -245,7 +245,7 @@ Dựa trên thông tin được cung cấp (Bài toán, Nhiệm vụ Stage hiệ
 *   **Sử dụng Số thập phân:** Cho điểm với một chữ số thập phân (ví dụ: 2.7, 4.2) để thể hiện sự khác biệt nhỏ.
 *   **Cân nhắc Nhiệm vụ Stage:** Luôn đối chiếu suy nghĩ với `current_stage_description` để đánh giá sự liên quan và tính cấp thiết. 
 *   **Dựa trên lịch sử hội thoại, nếu một người được nêu đích danh trong yêu cầu của người khác, suppress điểm của các thành viên còn lại. Ví dụ: Bob yêu cầu Charlie nói, suppress điểm của các thành viên khác ngoại trừ Charlie. 
-*   *(Hint nội bộ cho LLM: Mỗi yếu tố tích cực có thể cộng 0.1-0.3, yếu tố tiêu cực trừ 0.1-0.3 vào điểm tương ứng, nhưng kết quả cuối cùng phải nằm trong thang 1.0-5.0)*.
+*   **Hint nội bộ cho LLM: Mỗi yếu tố tích cực có thể cộng 0.1-0.3, yếu tố tiêu cực trừ 0.1-0.3 vào điểm tương ứng, nhưng kết quả cuối cùng phải nằm trong thang 1.0-5.0**.
 
 ## Thông tin Bạn Nhận Được:
 ### Bài toán đang thảo luận:
@@ -263,11 +263,11 @@ Dựa trên thông tin được cung cấp (Bài toán, Nhiệm vụ Stage hiệ
 ---
 
 ## Định dạng Đầu ra Bắt buộc:
-**CHỈ** trả về một danh sách JSON chứa các đối tượng, mỗi đối tượng tương ứng với một bạn học trong `{list_AI_name}`. **KHÔNG** thêm bất kỳ giải thích hay văn bản nào khác bên ngoài danh sách JSON này. Đảm bảo số lượng và tên trong kết quả khớp với `{list_AI_name}`.
+**CHỈ** trả về một danh sách JSON chứa các đối tượng, mỗi đối tượng tương ứng với một bạn học trong `{list_AI_name}`. **KHÔNG** thêm bất kỳ giải thích hay văn bản nào khác bên ngoài danh sách JSON này. Đảm bảo số lượng và tên trong kết quả khớp với [`{list_AI_name}`].
 ```json
 [
-    {{"name": "<tên bạn học 1>", "internal_score": <điểm số từ 1.0-5.0>, "external_score": <điểm số từ 1.0-5.0>}},
-    {{"name": "<tên bạn học 2>", "internal_score": <điểm số từ 1.0-5.0>, "external_score": <điểm số từ 1.0-5.0>}}
+    {{"name": "<tên bạn học 1>", "reason" : <giải thích ngắn gọn>, "internal_score": <điểm số từ 1.0-5.0>, "external_score": <điểm số từ 1.0-5.0>}},
+    {{"name": "<tên bạn học 2>", "reason" : <giải thích ngắn gọn>, "internal_score": <điểm số từ 1.0-5.0>, "external_score": <điểm số từ 1.0-5.0>}}
 ]
 
 """
@@ -278,7 +278,7 @@ Dựa trên thông tin được cung cấp (Bài toán, Nhiệm vụ Stage hiệ
 
 CLASSMATE_SPEAK_PROMPT = """
 ## Role & Context
-Bạn là {AI_name}.
+Bạn là {AI_name}. Đang trả thảo luận với người khác trong một nhóm.
 Vai trò cụ thể: {AI_role}
 Mục tiêu chính của bạn: {AI_goal}
 Bối cảnh: {AI_backstory}

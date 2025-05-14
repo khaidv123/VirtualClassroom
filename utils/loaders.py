@@ -3,7 +3,7 @@ import traceback
 import yaml
 import uuid
 from typing import Dict, List, Optional
-from core.persona import Persona # Import the dataclass
+from core.persona import Persona
 
 def load_personas_from_yaml(filepath: str) -> Dict[str, Persona]:
     """Loads agent personas from a YAML file."""
@@ -29,8 +29,8 @@ def load_personas_from_yaml(filepath: str) -> Dict[str, Persona]:
                 role=props.get('role', ''),
                 goal=props.get('goal', ''),
                 backstory=props.get('backstory', ''),
-                # <<< ASSIGN the tasks value >>>
-                tasks=props.get('tasks', ''), # Get the tasks string from YAML
+               
+                tasks=props.get('tasks', ''), 
                 personality_traits=props.get('personality_traits', []),
                 model=props.get('model', 'gemini-2.0-flash'),
                 tools=props.get('tools', [])
@@ -61,7 +61,7 @@ def load_phases_from_yaml(filepath: str) -> Dict[str, Dict]:
         return phases_cfg
     except FileNotFoundError:
         print(f"!!! WARN [Loader]: Phase configuration file not found: {filepath}. Using defaults.")
-        return {} # Return empty dict to signal using defaults
+        return {} 
     except yaml.YAMLError as e:
         print(f"!!! ERROR [Loader]: Error parsing YAML file {filepath}: {e}")
         return {}
@@ -78,10 +78,10 @@ def load_problem_context(filepath: str) -> Optional[Dict[str, str]]:
              print(f"!!! ERROR [Loader]: Invalid format or missing 'problem' key in {filepath}.")
              return None
         print(f"--- LOADER: Loaded problem context from {filepath}")
-        # Return the whole dictionary
+        
         return {
             'problem': context_cfg.get('problem', ''),
-            'solution': context_cfg.get('solution', '') # Include solution if present
+            'solution': context_cfg.get('solution', '') 
         }
     except FileNotFoundError:
         print(f"!!! ERROR [Loader]: Problem context file not found: {filepath}")
@@ -91,5 +91,5 @@ def load_problem_context(filepath: str) -> Optional[Dict[str, str]]:
         return None
     except Exception as e:
         print(f"!!! ERROR [Loader]: Unexpected error loading problem context from {filepath}: {e}")
-        traceback.print_exc() # Print full traceback for unexpected errors
+        traceback.print_exc() 
         return None

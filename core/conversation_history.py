@@ -3,13 +3,13 @@ import time
 import uuid
 import threading
 import json
-from flask import g # Use Flask's application context for DB access
-from database.database import get_db # Import the get_db function
+from flask import g 
+from database.database import get_db 
 
 class ConversationHistory:
     def __init__(self):
         # No longer holds data directly, interacts with DB via get_db()
-        self._lock = threading.Lock() # Still useful for potential future complex ops
+        self._lock = threading.Lock() 
         print("--- CONV_HIST: Initialized (DB Interaction Mode) ---")
 
     def add_event(self, session_id: str, event_type: str, source: str, content: dict, metadata: dict = None):
@@ -19,7 +19,7 @@ class ConversationHistory:
              return None
 
         event_id = str(uuid.uuid4())
-        timestamp = int(time.time() * 1000) # Milliseconds
+        timestamp = int(time.time() * 1000) 
         metadata = metadata or {}
 
         db = get_db()
@@ -29,15 +29,14 @@ class ConversationHistory:
                 INSERT INTO events (event_id, session_id, timestamp, event_type, source, content, metadata)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
-                (event_id, session_id, timestamp, event_type, source, content, metadata) # Pass dicts directly (adapter handles JSON)
+                (event_id, session_id, timestamp, event_type, source, content, metadata) 
             )
             db.commit()
-            print(f"HIST DB LOG [{session_id}]: [{event_type}] Source={source}") # Log to console
+            print(f"HIST DB LOG [{session_id}]: [{event_type}] Source={source}") 
 
-            # Return the structure consistent with previous version for immediate use
             return {
                 "event_id": event_id,
-                "session_id": session_id, # Include session_id
+                "session_id": session_id, 
                 "timestamp": timestamp,
                 "event_type": event_type,
                 "source": source,
@@ -46,7 +45,7 @@ class ConversationHistory:
             }
         except Exception as e:
             print(f"!!! ERROR [ConvHistory]: Failed to add event to DB for session {session_id}: {e}")
-            db.rollback() # Rollback on error
+            db.rollback() 
             return None
 
 
@@ -61,19 +60,15 @@ class ConversationHistory:
         params = [session_id]
 
         if count:
-            # Note: Efficient limiting might depend on DB. For SQLite, getting all and slicing might be okay for moderate history.
-            # For large histories, consider OFFSET/LIMIT or window functions if performance is critical.
-            # Let's fetch all and slice in Python for simplicity here.
-            pass # Fetch all first
+            pass 
 
         try:
             cursor = db.execute(query, params)
-            # Convert rows to dictionaries (using sqlite3.Row factory helps)
-            # The JSON_TEXT converter handles 'content' and 'metadata'
+            
             history = [dict(row) for row in cursor.fetchall()]
 
             if count:
-                return history[-count:] # Slice the last 'count' items
+                return history[-count:] 
             else:
                 return history
         except Exception as e:

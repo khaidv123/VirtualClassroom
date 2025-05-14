@@ -1,43 +1,42 @@
 :root {
     /* Learning System Palette */
-    --primary-color: #4A90E2;       /* Professional Blue - for main actions, titles, highlights */
-    --primary-darker-color: #3A7BC8; /* Darker blue for hover states on primary buttons */
-    --primary-color-transparent: rgba(74, 144, 226, 0.2); /* For focus rings */
-    --primary-color-rgb: 74, 144, 226; /* RGB version for tinted shadows */
-    --secondary-color: #7FBAF5;     /* Lighter Blue - for hover states, secondary elements */
-    --tertiary-color: #EBF5FF;      /* Very Light Blue/Grey - for backgrounds of elements like messages, cards */
+    --primary-color: #4A90E2;      
+    --primary-darker-color: #3A7BC8; 
+    --primary-color-transparent: rgba(74, 144, 226, 0.2); 
+    --primary-color-rgb: 74, 144, 226; 
+    --secondary-color: #7FBAF5;     
+    --tertiary-color: #EBF5FF;     
     
-    --light-color: #F8F9FA;        /* Main Page Background - very light grey, almost white */
-    --content-bg-color: #FFFFFF;   /* White - for main content areas like chat, info panel */
+    --light-color: #F8F9FA;        
+    --content-bg-color: #FFFFFF;   
 
-    --dark-color: #34495E;         /* Base Dark Grey Text */
+    --dark-color: #34495E;        
     --text-color-main: var(--dark-color);
-    --text-color-secondary: #546E7A; /* Medium Grey Text (slightly lighter than dark-color) */
-    --text-color-disabled: #90A4AE;  /* Light Grey Text (for disabled/muted items) */
+    --text-color-secondary: #546E7A; 
+    --text-color-disabled: #90A4AE; 
 
-    --user-color: #50C878;         /* Emerald Green - for user messages */
-    --user-text-color: #FFFFFF;    /* White text on user messages */
+    --user-color: #50C878;         
+    --user-text-color: #FFFFFF;   
 
-    --ai-message-bg: #F0F4F8;      /* Slightly off-white/light blue for AI messages */
-    --ai-message-border: var(--secondary-color); /* Default AI border */
+    --ai-message-bg: #F0F4F8;      
+    --ai-message-border: var(--secondary-color); 
 
-    --system-message-bg: #F5F5F5;  /* Light grey for system messages */
-    --system-message-border: #B0BEC5; /* Muted grey border for system messages */
-    --system-message-text: #546E7A;   /* Text color for system messages (matches text-color-secondary) */
+    --system-message-bg: #F5F5F5; 
+    --system-message-border: #B0BEC5; 
+    --system-message-text: #546E7A;  
 
-    --success-color: #2ECC71;       /* Green - for success states, connected */
-    --warning-color: #F39C12;       /* Orange - for warnings, connecting */
-    --error-color: #E74C3C;         /* Red - for errors, disconnected */
-    --typing-color: var(--primary-color); /* Color for typing status */
+    --success-color: #2ECC71;     
+    --warning-color: #F39C12;      
+    --error-color: #E74C3C;         
+    --typing-color: var(--primary-color); 
 
-    /* Agent Specific Colors (Examples - MATCH YOUR AGENT NAMES) */
-    --agent-coderai-color: #F5A623;   /* Orange for CoderAI */
-    --agent-managerai-color: #7ED321; /* Bright Green for ManagerAI */
-    /* --agent-anotheragent-color: #BB6BD9; */ /* Purple for another agent example */
+    /* Agent Specific Colors */
+    --agent-coderai-color: #F5A623;   
+    --agent-managerai-color: #7ED321; 
 
-    --border-color-light: #E0E6ED; /* Light border color for dividers */
-    --border-color-medium: #CFD8DC; /* Medium border color */
-    --shadow-color: rgba(0, 0, 0, 0.07); /* Softer shadow */
+    --border-color-light: #E0E6ED;
+    --border-color-medium: #CFD8DC; 
+    --shadow-color: rgba(0, 0, 0, 0.07);
 
     --border-radius: 6px;
     --transition: all 0.2s ease-in-out;
@@ -53,7 +52,6 @@
 body {
     background-color: var(--light-color);
     color: var(--dark-color);
-    /* Allow body scrolling on smaller screens if needed */
 }
 
 .container {
@@ -62,8 +60,8 @@ body {
     padding: 15px;
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Full viewport height */
-    overflow: hidden; /* Prevent container itself from scrolling */
+    height: 100vh; 
+    overflow: hidden;
 }
 
 header {
@@ -73,20 +71,20 @@ header {
     padding-bottom: 15px;
     margin-bottom: 15px;
     border-bottom: 1px solid var(--border-color-light);
-    flex-shrink: 0; /* Prevent header from shrinking */
+    flex-shrink: 0; 
 }
 
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.5rem; /* Slightly smaller */
+    font-size: 1.5rem; 
     font-weight: 600;
     color: var(--primary-color);
 }
 
 .logo i {
-    color: var(--primary-color); /* Updated to match primary for stronger branding */
+    color: var(--primary-color); 
 }
 
 /* Status Indicator in Header */
@@ -98,12 +96,12 @@ header {
     display: flex;
     align-items: center;
     gap: 6px;
-    transition: background-color 0.3s ease; /* Transition background */
+    transition: background-color 0.3s ease; 
 }
 
 .status i#connectionStatusIcon {
     font-size: 0.7rem;
-    transition: color 0.3s ease; /* Transition icon color */
+    transition: color 0.3s ease; 
 }
 
 /* Connection Status Backgrounds */
@@ -115,8 +113,8 @@ header {
 .main-content {
     display: flex;
     gap: 15px;
-    flex: 1; /* Take remaining vertical space */
-    overflow: hidden; /* Important: Prevent content overflow */
+    flex: 1; 
+    overflow: hidden; 
 }
 
 .chat-container {
@@ -125,8 +123,8 @@ header {
     flex-direction: column;
     background-color: var(--content-bg-color);
     border-radius: var(--border-radius);
-    box-shadow: 0 2px 8px var(--shadow-color); /* Softer shadow */
-    overflow: hidden; /* Contained overflow */
+    box-shadow: 0 2px 8px var(--shadow-color);
+    overflow: hidden;
 }
 
 .info-panel {
@@ -135,10 +133,10 @@ header {
     border-radius: var(--border-radius);
     box-shadow: 0 2px 8px var(--shadow-color);
     padding: 15px;
-    overflow-y: auto; /* Allow scrolling */
+    overflow-y: auto; 
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Slightly more gap between sections */
+    gap: 20px; 
 }
 
 /* Custom Scrollbars (Webkit) */
@@ -148,28 +146,28 @@ header {
 }
 .info-panel::-webkit-scrollbar-track,
 .chat-messages::-webkit-scrollbar-track {
-    background: var(--tertiary-color); /* Updated scrollbar track */
+    background: var(--tertiary-color); 
     border-radius: 3px;
 }
 .info-panel::-webkit-scrollbar-thumb,
 .chat-messages::-webkit-scrollbar-thumb {
-    background: var(--border-color-medium); /* Updated scrollbar thumb */
+    background: var(--border-color-medium);
     border-radius: 3px;
 }
 .info-panel::-webkit-scrollbar-thumb:hover,
 .chat-messages::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-color); /* Updated scrollbar thumb hover */
+    background: var(--secondary-color); 
 }
 
 /* Chat Messages Area */
 .chat-messages {
-    flex: 1; /* Take available space */
-    overflow-y: auto; /* Enable scrolling */
+    flex: 1; 
+    overflow-y: auto; 
     padding: 15px;
 }
 
 .message {
-    margin-bottom: 12px; /* Slightly less margin */
+    margin-bottom: 12px; 
     display: flex;
     flex-direction: column;
     max-width: 85%;
@@ -198,28 +196,28 @@ header {
 .sender-name {
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--primary-color); /* Default sender color */
+    color: var(--primary-color); 
 }
 
 .message.user-message .sender-name {
-    color: rgba(255, 255, 255, 0.9); /* Kept for contrast on user message bg */
+    color: rgba(255, 255, 255, 0.9); 
 }
 
 .timestamp {
     font-size: 0.75rem;
     color: #999;
     margin-left: 10px;
-    white-space: nowrap; /* Prevent timestamp wrapping */
+    white-space: nowrap; 
 }
 
 .message-content {
     padding: 10px 15px;
     border-radius: var(--border-radius);
-    background-color: var(--ai-message-bg); /* Default background for AI/system if not overridden */
+    background-color: var(--ai-message-bg); 
     word-break: break-word;
     line-height: 1.5;
-    position: relative; /* For pseudo-elements if needed */
-    box-shadow: 0 1px 2px var(--shadow-color); /* Subtle shadow on messages */
+    position: relative; 
+    box-shadow: 0 1px 2px var(--shadow-color);
 }
 
 /* User Message Specific Styles */
@@ -241,9 +239,7 @@ header {
     border-left: 4px solid var(--ai-message-border); 
 }
 
-/* --- CORRECTED: AI Message Border Colors (match JS classes) --- */
-/* Assumes JS adds classes like 'agent-coderai', 'agent-managerai' */
-/* Make sure the agent name here matches the CSS variable name */
+
 .message.ai-message.agent-coderai .message-content {
     border-left-color: var(--agent-coderai-color);
 }
@@ -274,20 +270,20 @@ header {
     height: 25px;
     font-size: 0.85rem;
     font-style: italic;
-    color: var(--text-color-secondary); /* Updated color */
+    color: var(--text-color-secondary); 
     border-top: 1px solid var(--border-color-light);
-    background-color: var(--light-color); /* Differentiate from chat area */
-    flex-shrink: 0; /* Prevent shrinking */
-    line-height: 15px; /* Match height */
+    background-color: var(--light-color); 
+    flex-shrink: 0; 
+    line-height: 15px; 
     text-align: left;
 }
 
 /* Chat Input Area */
 .chat-input {
-    padding: 10px 15px; /* Reduced padding */
+    padding: 10px 15px; 
     border-top: 1px solid var(--border-color-light);
     background-color: var(--content-bg-color);
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0; 
 }
 
 .input-container {
@@ -302,19 +298,19 @@ header {
     border: 1px solid var(--border-color-medium);
     border-radius: var(--border-radius);
     resize: none;
-    min-height: 42px; /* Slightly smaller min-height */
+    min-height: 42px; 
     max-height: 120px;
     font-size: 0.95rem;
     line-height: 1.4;
     transition: var(--transition);
     overflow-y: auto;
-    background-color: var(--tertiary-color); /* Slight inset look */
+    background-color: var(--tertiary-color); 
 }
 
 .input-container textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px var(--primary-color-transparent); /* Softer focus shadow */
+    box-shadow: 0 0 0 2px var(--primary-color-transparent); 
     background-color: var(--content-bg-color);
 }
 
@@ -323,7 +319,7 @@ header {
     color: white;
     border: none;
     border-radius: var(--border-radius);
-    height: 42px; /* Match textarea min-height */
+    height: 42px; 
     width: 42px;
     padding: 0;
     cursor: pointer;
@@ -340,7 +336,7 @@ header {
 /* Use .disabled class added by JS */
 .send-btn.disabled,
 .send-btn:disabled {
-    background-color: #BDC3C7; /* Neutral grey for disabled */
+    background-color: #BDC3C7; 
     cursor: not-allowed;
     opacity: 0.7;
 }
@@ -364,12 +360,12 @@ header {
 
 .stage-info {
     background-color: var(--tertiary-color);
-    padding: 12px; /* Giảm padding */
+    padding: 12px; 
     border-radius: var(--border-radius);
 }
 
 .current-stage {
-    font-size: 1.3rem; /* Giảm font-size */
+    font-size: 1.3rem; 
     font-weight: 600;
     color: var(--primary-color);
     margin-bottom: 3px;
@@ -377,7 +373,7 @@ header {
 
 .stage-description {
     font-size: 0.85rem;
-    color: var(--text-color-secondary); /* Updated color */
+    color: var(--text-color-secondary); 
 }
 
 .stage-progress {
@@ -388,7 +384,7 @@ header {
 .progress-label {
     margin-bottom: 5px;
     font-size: 0.9em;
-    color: var(--text-color-secondary); /* Updated color */
+    color: var(--text-color-secondary); 
     display: flex;
     justify-content: space-between;
 }
@@ -446,12 +442,12 @@ header {
 .participants {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Giảm gap */
+    gap: 8px; 
 }
 
 /* Participants List Styles */
 .participants {
-    list-style: none; /* Remove default list bullets */
+    list-style: none; 
     padding: 0;
     margin: 0;
     display: flex;
@@ -467,8 +463,8 @@ header {
     border-radius: 6px;
     background-color: var(--content-bg-color);
     box-shadow: 0 1px 2px var(--shadow-color);
-    border-left: 5px solid transparent; /* Base border */
-    transition: background-color 0.2s ease, border-left-color 0.3s ease; /* Animate border color */
+    border-left: 5px solid transparent; 
+    transition: background-color 0.2s ease, border-left-color 0.3s ease; 
 }
 
 .participant:hover {
@@ -479,13 +475,13 @@ header {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background-color: var(--border-color-medium); /* Default avatar color */
+    background-color: var(--border-color-medium); 
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    margin-right: 12px; /* Slightly more margin */
+    margin-right: 12px; 
     font-size: 0.9em;
     flex-shrink: 0;
 }
@@ -497,16 +493,16 @@ header {
 
 .participant-name {
     font-weight: 600;
-    color: var(--text-color-main); /* Updated color */
+    color: var(--text-color-main); 
     margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis if name is too long */
+    text-overflow: ellipsis;
 }
 
 .participant-status {
     font-size: 0.85em;
-    color: var(--text-color-secondary); /* Updated color */
+    color: var(--text-color-secondary); 
     display: flex;
     align-items: center;
     white-space: nowrap;
@@ -516,7 +512,7 @@ header {
     display: inline-block;
     width: 6px;
     height: 6px;
-    background-color: var(--typing-color); /* Use typing color variable */
+    background-color: var(--typing-color); 
     border-radius: 50%;
     margin-left: 5px;
     animation: typing 1s infinite ease-in-out;
@@ -525,7 +521,6 @@ header {
 }
 
 /* --- CORRECTED: Participant Avatar Colors --- */
-/* Target the LI using data-agent-name, then the avatar div inside */
 li.participant[data-agent-name="Human"] .participant-avatar {
     background-color: var(--user-color);
 }
@@ -561,62 +556,60 @@ li.participant.status-typing {
 }
 
 
-/* Màu nền và avatar cho từng participant (DÙNG CLASS = participant-<agent_id>) */
 .participant.participant-Human .participant-avatar { background-color: var(--user-color); }
 .participant.participant-CoderAI .participant-avatar { background-color: var(--agent-coderai-color); }
 .participant.participant-ManagerAI .participant-avatar { background-color: var(--agent-managerai-color); }
-/* Thêm các AI khác */
+
 
 
 .stats {
-    display: grid; /* Dùng grid cho dễ căn */
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Chia cột tự động */
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
     gap: 10px;
 }
 
 .stat-card {
-    /* flex: 1; */ /* Bỏ flex khi dùng grid */
     background-color: var(--tertiary-color);
-    padding: 12px; /* Giảm padding */
+    padding: 12px; 
     border-radius: var(--border-radius);
     text-align: center;
 }
 
 .stat-value {
-    font-size: 1.6rem; /* Giảm font-size */
+    font-size: 1.6rem; 
     font-weight: 600;
     color: var(--primary-color);
     margin-bottom: 3px;
 }
 
 .stat-label {
-    font-size: 0.75rem; /* Giảm font-size */
-    color: var(--text-color-secondary); /* Updated color */
-    text-transform: uppercase; /* Viết hoa label */
+    font-size: 0.75rem; 
+    color: var(--text-color-secondary); 
+    text-transform: uppercase; 
 }
 
 .controls {
-    margin-top: 15px; /* Giảm margin */
-    border-top: 1px solid var(--border-color-light); /* Thêm đường kẻ phân cách */
-    padding-top: 15px; /* Padding trên */
+    margin-top: 15px; 
+    border-top: 1px solid var(--border-color-light); 
+    padding-top: 15px; 
 }
 
 .control-btn {
     display: block;
     width: 100%;
-    padding: 10px 12px; /* Giảm padding */
-    margin-bottom: 8px; /* Giảm margin */
-    background-color: var(--tertiary-color); /* Màu nền nhạt hơn */
-    border: 1px solid var(--border-color-medium); /* Thêm border nhẹ */
+    padding: 10px 12px; 
+    margin-bottom: 8px; 
+    background-color: var(--tertiary-color); 
+    border: 1px solid var(--border-color-medium); 
     border-radius: var(--border-radius);
-    color: var(--text-color-main); /* Updated color */
+    color: var(--text-color-main); 
     font-weight: 500;
     cursor: pointer;
     transition: var(--transition);
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px; /* Giảm gap */
+    gap: 8px; 
     font-size: 0.9rem;
 }
 
@@ -626,7 +619,7 @@ li.participant.status-typing {
     color: white;
 }
 .control-btn:last-child {
-     margin-bottom: 0; /* Bỏ margin cho nút cuối */
+     margin-bottom: 0; 
 }
 
 .control-btn.restart {
@@ -636,17 +629,17 @@ li.participant.status-typing {
 }
 
 .control-btn.restart:hover {
-    background-color: var(--primary-darker-color); /* Darker shade for hover */
+    background-color: var(--primary-darker-color); 
     border-color: var(--primary-darker-color);
 }
 
 .control-btn i {
-    font-size: 0.9em; /* Kích thước icon tương đối */
+    font-size: 0.9em; 
 }
 
-/* Thêm trạng thái loading cho nút (nếu cần) */
-.button-loading .fas { display: none; } /* Ẩn icon thường */
-.button-loading::after { /* Hiện spinner */
+
+.button-loading .fas { display: none; } 
+.button-loading::after { 
     content: '';
     display: inline-block;
     width: 1em;
@@ -655,18 +648,18 @@ li.participant.status-typing {
     border-radius: 50%;
     border-top-color: transparent;
     animation: spin 0.6s linear infinite;
-    margin-left: 5px; /* Khoảng cách với text (nếu có) */
+    margin-left: 5px; 
 }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
 
-.disabled { /* Style cho nút bị vô hiệu hóa */
+.disabled { 
     opacity: 0.6;
     cursor: not-allowed;
-    background-color: #e0e0e0 !important; /* Ghi đè màu nền */
-    color: #999 !important; /* Ghi đè màu chữ */
+    background-color: #e0e0e0 !important; 
+    color: #999 !important; 
     border-color: #d0d0d0 !important;
 }
 
@@ -679,7 +672,7 @@ li.participant.status-typing {
 /* Responsive Styles */
 @media (max-width: 1024px) {
     .container {
-        max-width: 98%; /* Use more width */
+        max-width: 98%; 
         padding: 10px;
     }
     .info-panel {
@@ -694,29 +687,29 @@ li.participant.status-typing {
 
 @media (max-width: 768px) {
     .container {
-        height: auto; /* Allow container to grow */
+        height: auto; 
         padding: 10px;
-        overflow-y: auto; /* Allow scrolling on the container itself if needed */
+        overflow-y: auto; 
     }
     body {
-         overflow-y: scroll; /* Ensure body can scroll */
+         overflow-y: scroll; 
     }
     .main-content {
         flex-direction: column;
-        overflow: visible; /* Allow content to determine height */
+        overflow: visible; 
         height: auto;
     }
     .info-panel {
-        order: -1; /* Move info panel to top */
+        order: -1; 
         margin-bottom: 15px;
-        max-height: none; /* Remove max-height */
-        flex: none; /* Let content determine height */
-        width: 100%; /* Full width */
-        overflow-y: visible; /* Disable internal scrolling */
+        max-height: none; 
+        flex: none; 
+        width: 100%; 
+        overflow-y: visible; 
     }
     .chat-container {
-         flex: 1; /* Take remaining space if any, but allow growth */
-         min-height: 60vh; /* Ensure decent chat height */
+         flex: 1;
+         min-height: 60vh;
          width: 100%;
     }
     .message {
@@ -740,29 +733,29 @@ li.participant.status-typing {
 }
 
 .problem-description {
-    background-color: var(--content-bg-color); /* Ensure consistency */
+    background-color: var(--content-bg-color); 
     padding: 15px;
     border-radius: 5px;
-    box-shadow: 0 1px 3px var(--shadow-color); /* Use shadow variable */
+    box-shadow: 0 1px 3px var(--shadow-color); 
     font-size: 0.95em;
     line-height: 1.5;
-    /* Ensure block math displays correctly */
+    
     text-align: left;
 }
 
-.problem-description p { /* Add margin to paragraphs if needed */
+.problem-description p { 
     margin-bottom: 0.5em;
 }
 
 .sub-tasks-section {
     margin-top: 15px;
     padding-top: 10px;
-    border-top: 1px solid var(--border-color-light); /* Use variable */
+    border-top: 1px solid var(--border-color-light); 
 }
 
 .sub-tasks-title {
     font-size: 0.9em;
-    color: var(--text-color-secondary); /* Use variable */
+    color: var(--text-color-secondary); 
     margin-bottom: 8px;
     font-weight: 600;
 }
@@ -777,12 +770,12 @@ li.participant.status-typing {
     padding: 4px 0;
     display: flex;
     align-items: center;
-    color: var(--text-color-main); /* Use variable */
+    color: var(--text-color-main);
 }
 
 .sub-tasks-list li.completed .task-description {
     text-decoration: line-through;
-    color: var(--text-color-disabled); /* Use variable */
+    color: var(--text-color-disabled); 
 }
 
 .sub-tasks-list li .task-status-icon {
@@ -797,31 +790,30 @@ li.participant.status-typing {
 }
 
 .sub-tasks-list li:not(.completed) .task-status-icon {
-    color: var(--text-color-disabled); /* Use variable */
+    color: var(--text-color-disabled); 
 }
 
 .sub-tasks-list li.no-tasks {
-    color: var(--text-color-secondary); /* Use variable */
+    color: var(--text-color-secondary); 
     font-style: italic;
 }
 
 
 .progress-container span {
-    /* Style for your stage markers, e.g., padding, color */
+    /* Style for stage markers, e.g., padding, color */
     padding: 0 10px;
-    color: var(--text-color-secondary); /* Use variable */
+    color: var(--text-color-secondary);
 }
 
 .progress-container span.active-stage-marker {
     font-weight: bold;
-    color: var(--primary-color); /* Or your theme's highlight color */
+    color: var(--primary-color); 
 }
 
 .progress-container {
     display: flex;
     justify-content: space-between;
     margin-bottom: 4px;
-    /* Optional: overflow-x for many stages */
     overflow-x: auto;
     white-space: nowrap;
 }
@@ -830,7 +822,7 @@ li.participant.status-typing {
     min-width: 18px;
     text-align: center;
     font-size: 0.95em;
-    color: var(--text-color-secondary); /* Use variable */
+    color: var(--text-color-secondary); 
     padding: 0 4px;
     cursor: pointer;
     position: relative;
@@ -870,9 +862,9 @@ li.participant.status-typing {
     font-weight: 500;
     transition: var(--transition);
     border: 1px solid var(--border-color-medium);
-    font-size: 0.9rem; /* Match other header elements */
-    line-height: 1.5; /* Ensure consistent height with other potential buttons */
-    display: inline-flex; /* Align icon and text if icon is added later */
+    font-size: 0.9rem; 
+    line-height: 1.5; 
+    display: inline-flex; 
     align-items: center;
 }
 
@@ -883,9 +875,9 @@ li.participant.status-typing {
 }
 
 /* Styles for templates/list_sessions.html */
-/* Body class .session-listing-page is used to scope these styles */
 
-.session-listing-page { /* Targets the body tag */
+
+.session-listing-page { 
     background-color: var(--light-color);
     color: var(--text-color-main);
 }
@@ -900,80 +892,80 @@ li.participant.status-typing {
 }
 .session-listing-page h1 {
     text-align: center;
-    color: var(--primary-darker-color); /* Darker primary for main title */
-    font-size: 2.2rem; /* Slightly larger */
-    margin-bottom: 35px; /* More space below */
+    color: var(--primary-darker-color); 
+    font-size: 2.2rem; 
+    margin-bottom: 35px; 
 }
 
 .session-listing-page h2 {
     text-align: center;
-    color: var(--primary-color); /* Primary color for section titles */
-    font-size: 1.6rem; /* Slightly larger */
-    margin-top: 0px; /* More space above */
-    margin-bottom: 25px; /* More space below */
+    color: var(--primary-color); 
+    font-size: 1.6rem; 
+    margin-top: 0px; 
+    margin-bottom: 25px; 
     padding-bottom: 12px;
-    border-bottom: 2px solid var(--primary-color-transparent); /* Softer, thicker underline */
+    border-bottom: 2px solid var(--primary-color-transparent); 
 }
 
 .session-listing-page ul {
-    max-height: 80vh;   /* hoặc 500px, tuỳ ý */
+    max-height: 80vh;   
     overflow-y: auto;
     margin-bottom: 30px;
     padding-right: 4px;
 }
 
 .session-listing-page li {
-    background-color: var(--tertiary-color); /* Light background for items */
-    margin-bottom: 18px; /* Slightly more margin */
-    padding: 20px 25px; /* Adjusted padding */
+    background-color: var(--tertiary-color); 
+    margin-bottom: 18px; 
+    padding: 20px 25px; 
     border-radius: var(--border-radius);
-    border: 1px solid var(--border-color-medium); /* Slightly more visible border */
+    border: 1px solid var(--border-color-medium); 
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.3s ease-in-out; /* Smoother transition */
-    box-shadow: 0 2px 5px rgba(var(--shadow-color-rgb, 0,0,0), 0.08); /* Subtle shadow */
+    transition: all 0.3s ease-in-out; 
+    box-shadow: 0 2px 5px rgba(var(--shadow-color-rgb, 0,0,0), 0.08); 
 }
 
 .session-listing-page li:hover {
     border-color: var(--primary-color);
-    box-shadow: 0 5px 15px rgba(var(--primary-color-rgb), 0.15); /* Primary-tinted shadow */
-    transform: translateY(-3px) scale(1.01); /* More dynamic hover */
-    background-color: var(--content-bg-color); /* Lighten on hover */
+    box-shadow: 0 5px 15px rgba(var(--primary-color-rgb), 0.15);
+    transform: translateY(-3px) scale(1.01); 
+    background-color: var(--content-bg-color);
 }
 
 .session-listing-page li .session-info {
     flex-grow: 1;
-    margin-right: 20px; /* More space */
+    margin-right: 20px;
 }
 
 .session-listing-page li a {
     text-decoration: none;
-    color: var(--primary-darker-color); /* Darker for better readability */
+    color: var(--primary-darker-color); 
     font-weight: 600;
-    font-size: 1.2rem; /* Larger link text */
-    display: flex; /* Align icon and text */
+    font-size: 1.2rem; 
+    display: flex; 
     align-items: center;
 }
 
 .session-listing-page li a i {
-    margin-right: 10px; /* Space after icon */
-    color: var(--primary-color); /* Icon color */
-    font-size: 1.1em; /* Slightly larger icon */
+    margin-right: 10px;
+    color: var(--primary-color); 
+    font-size: 1.1em; 
 }
 
 .session-listing-page li a:hover {
     text-decoration: underline;
-    color: var(--primary-color); /* Lighter blue on hover */
+    color: var(--primary-color); 
 }
 
 .session-listing-page li .session-meta {
     color: var(--text-color-secondary);
-    font-size: 0.9rem; /* Slightly larger meta text */
+    font-size: 0.9rem; 
     text-align: right;
-    min-width: 160px; /* Adjusted min-width */
+    min-width: 160px; 
     flex-shrink: 0;
-    display: flex; /* Align icon and text */
+    display: flex; 
     align-items: center;
 }
 
@@ -986,21 +978,21 @@ li.participant.status-typing {
 .session-listing-page .no-sessions-message {
     text-align: center;
     color: var(--text-color-secondary);
-    padding: 25px; /* More padding */
+    padding: 25px; 
     background-color: var(--tertiary-color);
     border-radius: var(--border-radius);
     margin-top: 25px;
     font-style: italic;
-    border: 1px dashed var(--border-color-medium); /* Dashed border */
+    border: 1px dashed var(--border-color-medium); 
 }
 
 .session-listing-page .new-session-form {
-    margin-top: 0; /* Để sát dưới danh sách */
+    margin-top: 0; 
     padding-top: 30px;
     text-align: center;
-    background-color: var(--tertiary-color); /* Light background for form section */
+    background-color: var(--tertiary-color); 
     border-radius: var(--border-radius);
-    box-shadow: 0 2px 8px rgba(var(--shadow-color-rgb, 0,0,0), 0.07); /* Subtle shadow for the form card */
+    box-shadow: 0 2px 8px rgba(var(--shadow-color-rgb, 0,0,0), 0.07); 
 }
 
 .session-listing-page .new-session-form .form-group {
@@ -1011,23 +1003,23 @@ li.participant.status-typing {
 }
 
 .session-listing-page .new-session-form label {
-    margin-bottom: 10px; /* More space */
-    font-weight: 600; /* Bolder label */
+    margin-bottom: 10px; 
+    font-weight: 600; 
     color: var(--text-color-main);
-    font-size: 1rem; /* Larger label */
+    font-size: 1rem; 
 }
 
 .session-listing-page .new-session-form input[type="text"] {
-    padding: 12px 18px; /* More padding */
+    padding: 12px 18px; 
     border: 1px solid var(--border-color-medium);
     border-radius: var(--border-radius);
     font-size: 1rem;
     width: 100%;
-    max-width: 350px; /* Slightly wider input */
-    background-color: var(--content-bg-color); /* White background for input */
+    max-width: 350px; 
+    background-color: var(--content-bg-color); 
     color: var(--text-color-main);
     transition: var(--transition);
-    box-shadow: inset 0 1px 3px rgba(var(--shadow-color-rgb, 0,0,0), 0.06); /* Softer inset shadow */
+    box-shadow: inset 0 1px 3px rgba(var(--shadow-color-rgb, 0,0,0), 0.06); 
 }
 
 .session-listing-page .new-session-form input[type="text"]:focus {
@@ -1037,30 +1029,30 @@ li.participant.status-typing {
 }
 
 .session-listing-page .new-session-form button[type="submit"] {
-    padding: 12px 30px; /* More padding */
+    padding: 12px 30px; 
     background-image: linear-gradient(to right, var(--primary-color) 0%, var(--primary-darker-color) 100%);
     color: white;
-    border: none; /* Remove border for gradient button */
+    border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 1.05rem; /* Slightly larger font */
+    font-size: 1.05rem; 
     font-weight: 500;
-    transition: all 0.3s ease; /* Transition for all properties */
-    box-shadow: 0 4px 8px rgba(var(--primary-color-rgb), 0.2); /* Softer shadow */
-    display: inline-flex; /* Align icon and text */
+    transition: all 0.3s ease; 
+    box-shadow: 0 4px 8px rgba(var(--primary-color-rgb), 0.2); 
+    display: inline-flex; 
     align-items: center;
     justify-content: center;
 }
 
 .session-listing-page .new-session-form button[type="submit"] i {
-    margin-right: 8px; /* Space between icon and text */
+    margin-right: 8px; 
     font-size: 1em;
 }
 
 .session-listing-page .new-session-form button[type="submit"]:hover {
     background-image: linear-gradient(to right, var(--primary-darker-color) 0%, var(--primary-color) 100%);
-    box-shadow: 0 6px 12px rgba(var(--primary-color-rgb), 0.3); /* Enhanced shadow on hover */
-    transform: translateY(-1px); /* Slight lift on hover */
+    box-shadow: 0 6px 12px rgba(var(--primary-color-rgb), 0.3);
+    transform: translateY(-1px); 
 }
 
 /* Flash Messages for session-listing-page */
@@ -1071,7 +1063,7 @@ li.participant.status-typing {
     font-size: 0.95rem;
     border: 1px solid transparent;
     text-align: center;
-    color: white; /* Default text color for flash messages */
+    color: white; 
 }
 
 .session-listing-page .flash.error {
@@ -1092,11 +1084,11 @@ li.participant.status-typing {
     }
     .session-listing-page li .session-info {
         margin-right: 0;
-        margin-bottom: 10px; /* Space when stacked */
+        margin-bottom: 10px; 
     }
     .session-listing-page li .session-meta {
         text-align: left;
-        min-width: auto; /* Allow it to shrink */
+        min-width: auto; 
     }
     .session-listing-page .new-session-form input[type="text"] {
         max-width: 100%;
