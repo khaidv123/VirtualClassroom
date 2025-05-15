@@ -118,7 +118,7 @@ class BehaviorExecutor:
             self.interaction_coordinator.post_event_to_clients(session_id, "agent_status", agent_id, {"status": "idle", "agent_name": agent_name}, True)
             return
 
-        # Post typing status
+        # Post typing status --> UI
         self.interaction_coordinator.post_event_to_clients(session_id, "agent_status", agent_id, {"status": "typing", "agent_name": agent_name}, True)
 
         # Calculate delay --> TYPING DELAY

@@ -85,8 +85,9 @@ class InteractionCoordinator:
             
     # --- Trigger Handling ---
     def handle_external_trigger(self, session_id: str, event_type: str, source: str, content: Dict):
+        """User trigger agent"""
         print(f"--- INT_COORD [{session_id}]: Received EXTERNAL trigger: Type={event_type}, Source={source}")
-        # Log event first (needs app context via ConversationHistory methods)
+        
         logged_event = self.conv_history.add_event(session_id, event_type, source, content)
         if not logged_event: return
 
@@ -104,9 +105,10 @@ class InteractionCoordinator:
              print(f"--- INT_COORD [{session_id}]: Warning - Response Orchestrator not set.")
 
     def handle_internal_trigger(self, session_id: str, event_type: str, source: str, content: Dict):
+        """Agent trigger another agent"""
         print(f"--- INT_COORD [{session_id}]: Received INTERNAL trigger: Type={event_type}, Source={source}")
         logged_event = None
-        # Log significant internal events (needs app context via ConversationHistory methods)
+         
         if event_type in ["new_message", "system_message", "phase_transition"]:
             logged_event = self.conv_history.add_event(session_id, event_type, source, content)
             if not logged_event: return
@@ -116,7 +118,7 @@ class InteractionCoordinator:
 
             # PAUSE
             delay = random.uniform(3, 10)
-            time.sleep(delay) # wait in case user enter more input
+            time.sleep(delay)
 
             # Trigger orchestrator for agent messages
             if event_type == 'new_message' and self.response_orchestrator and logged_event:

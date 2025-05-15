@@ -63,7 +63,7 @@ class AgentManager:
             futures.append(future)
 
         results = []
-        # Parallel
+        # PARALLEL
         for future in concurrent.futures.as_completed(futures):
             try:
                 result = future.result()

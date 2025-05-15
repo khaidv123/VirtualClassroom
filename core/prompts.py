@@ -273,12 +273,21 @@ Dựa trên thông tin được cung cấp (Bài toán, Nhiệm vụ Stage hiệ
 """
 
 
+'''
+[
+    {{"name": "<tên bạn học 1>", "internal_score": <điểm số từ 1.0-5.0>, "external_score": <điểm số từ 1.0-5.0>}},
+    {{"name": "<tên bạn học 2>", "internal_score": <điểm số từ 1.0-5.0>, "external_score": <điểm số từ 1.0-5.0>}}
+]
+'''
+
+
+
 ##########################################
 ##########################################
 
 CLASSMATE_SPEAK_PROMPT = """
 ## Role & Context
-Bạn là {AI_name}. Đang trả thảo luận với người khác trong một nhóm.
+Bạn là {AI_name}. Đang trả thảo luận với người khác trong mat nhóm.
 Vai trò cụ thể: {AI_role}
 Mục tiêu chính của bạn: {AI_goal}
 Bối cảnh: {AI_backstory}

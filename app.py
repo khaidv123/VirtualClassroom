@@ -210,7 +210,7 @@ def send_message(session_id):
 
     print(f"--- APP [{session_id}]: Received message from '{sender_name}' ({sender_id}): {user_message_text}")
 
-    # TRIGGER TYPE
+    # TRIGGER TYPE, CONTENT
     interaction_coordinator.handle_external_trigger(
         session_id=session_id,
         event_type="new_message",
