@@ -27,7 +27,7 @@ Phân tích **lịch sử cuộc hội thoại** gần đây của nhóm, đối
     - Thảo luận lan man, không còn tập trung vào nhiệm vụ của **giai đoạn hiện tại** sau khi có vẻ đã hoàn thành.
    
 4.  **Xác định Trạng thái (Ưu tiên kiểm tra từ trên xuống dưới):**
-    - **(1) - Bắt đầu:** Nếu bằng chứng cho thấy nhóm cần bắt đầu thảo luận/thực hiện nhiệm vụ mới. Chọn tín hiệu `["1", "Bắt đầu"]`.
+    - **(1) Bắt đầu:** Nếu bằng chứng cho thấy nhóm cần bắt đầu thảo luận/thực hiện nhiệm vụ mới. Chọn tín hiệu `["1", "Bắt đầu"]`.
     - **(2) Tiếp tục:** Nhóm đang trong quá trình thảo luận, thực hiện các nhiệm vụ của **giai đoạn hiện tại**. Chọn tín hiệu `["2", "Tiếp tục"]`.
     - **(3) Đưa ra tín hiệu kết thúc:** Nếu bằng chứng cho thấy nhóm *đã hoàn thành tất cả các nhiệm vụ* của **giai đoạn hiện tại** và không bàn luận thêm gì (tức là tất cả ID nhiệm vụ đều nằm trong `completed_task_ids`), nhưng chưa có dấu hiệu rõ ràng bắt đầu giai đoạn tiếp theo (chưa có ai khởi xướng). Chọn tín hiệu `["3", "Đưa ra tín hiệu kết thúc"]`.
     - **(4) Chuyển stage mới:** Chỉ chọn khi TẤT CẢ các nhiệm vụ của giai đoạn hiện tại đã hoàn thành** VÀ **có bằng chứng rõ ràng nhóm muốn *bắt đầu* thảo luận hoặc thực hiện nhiệm vụ của giai đoạn *kế tiếp*. Chọn tín hiệu `["4", "Chuyển stage mới"]`.
@@ -203,6 +203,11 @@ Lưu ý quan trọng:
 ##########################################
 ##########################################
 
+'''
+(1) Đánh giá cao điểm người bắc đầu step
+
+'''
+
 THOUGHTS_EVALUATOR_PROMPT = """
 ## Role
 Bạn là Người đánh giá Suy nghĩ Nội tâm (Inner Thought Evaluator) trong một nhóm học sinh thảo luận Toán.
@@ -236,7 +241,6 @@ Dựa trên thông tin được cung cấp (Bài toán, Nhiệm vụ Stage hiệ
     *   **(e) Tính Mạch lạc:** Suy nghĩ có liên quan trực tiếp và là phản hồi hợp lý cho tin nhắn/phát biểu cuối cùng trong `history` không? (Tránh lạc đề, bỏ qua câu hỏi)
     *   **(f) Tính Mới mẻ:** Suy nghĩ có cung cấp thông tin khác, tránh lặp lại những gì đã nói hoặc hành động đã thực hiện không?
     *   **(g) Cân bằng Lượt nói:** Có sự mất cân bằng trong lượt nói gần đây không? (Ví dụ: Chỉ 2 người nói chuyện, người khác im lặng lâu). Việc bạn này nói có giúp cân bằng hơn không?
-    *   **(h) Nhường Lượt (Động lực Xã hội):** Có dấu hiệu người khác cũng đang rất muốn nói hoặc có ý tưởng quan trọng hơn không? Liệu việc chờ đợi có phù hợp hơn không?
 
 ### Hướng dẫn Quan trọng Khi Đánh giá:
 *   **Sử dụng Toàn bộ Thang điểm:** Hãy mạnh dạn cho điểm thấp (1.0-2.0) hoặc cao (4.0-5.0) khi cần thiết. Đừng mặc định ở mức trung bình.
@@ -274,6 +278,10 @@ Dựa trên thông tin được cung cấp (Bài toán, Nhiệm vụ Stage hiệ
 
 
 '''
+
+    *   **(h) Nhường Lượt (Động lực Xã hội):** Có dấu hiệu người khác cũng đang rất muốn nói hoặc có ý tưởng quan trọng hơn không? Liệu việc chờ đợi có phù hợp hơn không?
+
+    
 [
     {{"name": "<tên bạn học 1>", "internal_score": <điểm số từ 1.0-5.0>, "external_score": <điểm số từ 1.0-5.0>}},
     {{"name": "<tên bạn học 2>", "internal_score": <điểm số từ 1.0-5.0>, "external_score": <điểm số từ 1.0-5.0>}}
@@ -320,35 +328,53 @@ Dựa trên suy nghĩ nội tâm **hiện tại** của bạn (`inner_thought`),
 ---
 **Nhiệm vụ/Mục tiêu Giai đoạn Hiện tại (current_stage_description):**
 {current_stage_description} 
+
+---
+**Lịch sử Hội thoại:** 
+{history} 
+
 ---
 **Suy nghĩ Nội tâm Hiện tại của Bạn:** 
 {inner_thought} 
 ---
-**Lịch sử Hội thoại:** 
-{history} 
----
+
 
 ## Định dạng đầu ra
 **YÊU CẦU TUYỆT ĐỐI:** 
     1. Chỉ trả về MỘT đối tượng JSON DUY NHẤT. KHÔNG thêm bất kỳ giải thích hay văn bản nào khác bên ngoài đối tượng JSON. 
-    2. KHÔNG chứa CON#/STEP#/FUNC#, tin nhắn phải tự nhiên.
+    2. KHÔNG chứa CON#/STEP#/FUNC# ở trong `spoken_message`, tin nhắn phải tự nhiên.
     3. Mọi biểu thức toán học, tabular đều in ra dạng latex và để trong dấu '$' ví dụ $x^2$, nhớ escape các kí tự đặc biệt. VÍ dụ: $f'(x) = \\frac{{2}}{{(x+1)^2}}$.
 
 ```json
 {{
-  "spoken_message": "<Nội dung câu nói cuối cùng, tự nhiên, có thể dùng minh họa (ví dụ bảng biến thiên, hình bằng Latex) để giúp mọi người dễ hình dung>"
+  "reason" : "Dựa vào suy nghĩ để đưa ra hành động thực hiện, xác định nên nói dài (vài câu), trung bình hay ngắn (1 câu).",
+  "spoken_message": "<Nội dung câu nói tự nhiên, giống với những gì đã suy nghĩ>"
 }}
 
 Ví dụ JSON Output ĐÚNG:
 {{
-  "spoken_message": "Chào A, mình nghĩ bước đầu tiên là tìm tập xác định đúng không?"
+  "reason" : "mình đang suy nghĩ chào A, nên mình sẽ thực hiện hành động chào, nên là một câu chào ngắn.",
+  "spoken_message": "Chào A, bạn sẵn sàng cùng cả nhóm làm bài rồi chứ."
 }}
+
 {{
+  "reason" : "mình đang suy nghĩ về nhận xét cách làm của B ở CON#5 và mình thấy đúng, nên mình sẽ thực hiện hành động đồng ý với B, nên là câu khích lệ ngắn gọn.",
   "spoken_message": "Đúng rồi B, cách làm đó hợp lý đó. Dùng đạo hàm để xét tính đơn điệu là chuẩn rồi."
 }}
 
-Ví dụ JSON Output SAI, mà bạn cần tránh (Không được lộ CON#/STEP# trong spoken_message):
 {{
-  "spoken_message": "Đúng rồi B, cách làm của bạn ở CON#4 là hợp lý đó. Dùng đạo hàm để xét tính đơn điệu là chuẩn rồi."
+  "reason" : "mình đang suy nghĩ trả lời yêu cầu vẽ BBT của C ở lượt trước, nên mình sẽ thực hiện hành động dựa trên FUNC#1 của mình là đưa ra ý kiến, nên là một lời giải dài hơn đủ để vẽ bảng.",
+  "spoken_message": "Đây đây, mình vẽ như này được không: | $x$    | $-\infty$ |       $-1$       | $+\infty$ |... "
 }}
+
+{{
+  "reason": "mình đang suy nghĩ về việc giúp bạn nhìn lại giả thiết và cách lập luận, nên mình sẽ đặt một câu hỏi phản biện nhẹ để bạn suy nghĩ lại, nên là một lời nói dài vừa phải.",
+  "spoken_message": "Ê nhưng giả thiết đó có chắc đủ để suy ra kết luận chưa? Mình thấy hơi thiếu một điều kiện gì đó, bạn thử nghĩ lại xem."
+}}
+
+{{
+  "reason" : "mình đang suy nghĩ để khuyến khích học sinh tự đánh giá kết quả, nên mình sẽ thực hiện hành động đặt câu hỏi mở hướng tới critical thinking, nên là một câu ngắn gọn gợi mở.",
+  "spoken_message": "Nếu ta thay đổi giả thiết ban đầu, kết quả có còn đúng không, và tại sao lại như vậy?"
+}}
+
 """
