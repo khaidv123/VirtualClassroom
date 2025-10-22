@@ -25,7 +25,7 @@ MultiAgentClassroom's architecture is designed to support rich educational exper
     *   **Delivering the Instructional/Debate Response:** The selected agent, guided by the `BehaviorExecutor` and LLM, constructs its message. This message is carefully aligned with its pedagogical persona and the specific instructional goal that led to its selection by the **multi-agent system**.
     *   **Sharing Knowledge and Perspectives:** The chosen agent's response is distributed via the **Interaction Coordinator** and SSE to the student and all other agents. This ensures that the student receives targeted input while the entire **multi-agent teaching team** remains aware of the evolving learning dialogue.
   
-![system](assets/Thesis_system.drawio.png)
+![system](assets/image_overview.jpg)
 
 3.  **Configuring the Educational Environment & Tracking Progress:**
     *   **YAML Files (Defining Pedagogical Roles & Learning Flows):** These files are instrumental in shaping the **virtual classroom**.
@@ -96,6 +96,8 @@ capabilities of conversational agents. The conversation will be created first as
 The results show that the system outperforms the baseline on all four tasks.
 ![res](assets/radar_v2.png)
 
+#### Case Study
+![case](assets/CaseStudy_PRISM.jpg)
 
 ---
 ## Flow of System
